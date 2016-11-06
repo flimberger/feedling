@@ -2,6 +2,7 @@ set(feedling_SRCS
     feedling.cpp
     Application.cpp
     Entry.cpp
+    EntriesModel.cpp
     Feed.cpp
     FeedsModel.cpp
     FeedsModelItem.cpp

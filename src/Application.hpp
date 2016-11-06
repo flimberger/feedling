@@ -14,6 +14,8 @@ class QNetworkReply;
 
 namespace feedling {
 
+class EntriesModel;
+
 class Application : public QObject
 {
     Q_OBJECT
@@ -24,6 +26,8 @@ public:
     Q_SLOT void onCreated();
     Q_SLOT void onFetchFeeds();
 
+    Q_INVOKABLE void setEntryList(QUrl url);
+
 private:
     Q_SLOT void onFeedDownloadFinished(QNetworkReply *reply);
 
@@ -33,6 +37,7 @@ private:
     QNetworkAccessManager *m_network;
     QQmlApplicationEngine m_qmlAppEngine;
     FeedsModel m_feedsModel;
+    std::unique_ptr<EntriesModel> m_entriesModel;
 };
 
 }  // namespace feedling

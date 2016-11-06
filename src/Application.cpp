@@ -12,6 +12,7 @@
 #include <QtQml/QQmlContext>
 
 #include "Feed.hpp"
+#include "EntriesModel.hpp"
 
 namespace feedling {
 
@@ -31,6 +32,7 @@ void Application::onCreated()
     // TODO: make this asynchronous
     getFeedsFromConfig();
 
+    m_qmlAppEngine.rootContext()->setContextProperty("g_app", this);
     m_qmlAppEngine.rootContext()->setContextProperty("feedsModel", &m_feedsModel);
     m_qmlAppEngine.load(QUrl("qrc:///ui/main.qml"));
 }
@@ -40,6 +42,15 @@ void Application::onFetchFeeds()
 //    for (const auto &feed : m_feedsModel.feeds()) {
 //        m_network->get(QNetworkRequest(feed->url()));
 //    }
+}
+
+void Application::setEntryList(QUrl url)
+{
+    auto ptr = m_feedsModel.getFeed(url).lock();
+    if (ptr) {
+        m_entriesModel = std::make_unique<EntriesModel>(ptr);
+        m_qmlAppEngine.rootContext()->setContextProperty("g_entriesModel", m_entriesModel.get());
+    }
 }
 
 void Application::onFeedDownloadFinished(QNetworkReply *reply)
@@ -75,6 +86,8 @@ void Application::getFeedsFromConfig()
     Q_ASSERT(success);
     success = m_feedsModel.addItem<std::vector<QString>>(std::make_shared<Feed>("Pushing Pixels", "Kirill Grouchnikovs Blog", QUrl("http://www.pushing-pixels.org/feed")), graphicsPath);
     Q_ASSERT(success);
+
+    setEntryList(QUrl("http://blog.qt.io/feed"));
 }
 
 }  // namespace feedling

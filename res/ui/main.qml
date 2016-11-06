@@ -50,21 +50,21 @@ ApplicationWindow {
             ScrollView {
                 ListView {
                     delegate: entriesDelegate
-                    // model: entriesModel
-                    model: ListModel {
-                        ListElement {
-                            title: "test0"
-                        }
-                        ListElement {
-                            title: "test1"
-                        }
-                        ListElement {
-                            title: "test2"
-                        }
-                        ListElement {
-                            title: "test3"
-                        }
-                    }
+                    model: g_entriesModel
+//                    model: ListModel {
+//                        ListElement {
+//                            title: "test0"
+//                        }
+//                        ListElement {
+//                            title: "test1"
+//                        }
+//                        ListElement {
+//                            title: "test2"
+//                        }
+//                        ListElement {
+//                            title: "test3"
+//                        }
+//                    }
 
                     Component {
                         id: entriesDelegate
