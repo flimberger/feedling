@@ -4,6 +4,7 @@ set(feedling_SRCS
     Entry.cpp
     EntriesModel.cpp
     Feed.cpp
+    FeedParser.cpp
     FeedsModel.cpp
     FeedsModelItem.cpp
     Folder.cpp

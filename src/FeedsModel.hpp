@@ -3,6 +3,7 @@
 
 #include <iterator>
 #include <memory>
+#include <vector>
 
 #include <QtCore/QAbstractItemModel>
 #include <QtCore/QModelIndex>
@@ -45,6 +46,7 @@ public:
     // FeedsModel interface
 
     std::weak_ptr<Feed> getFeed(QUrl feedUrl);
+    const std::vector<std::weak_ptr<Feed>> &feeds() const;
 
     template<typename Container>
     std::weak_ptr<Folder> getFolder(const Container &path);
@@ -54,6 +56,7 @@ public:
 
 private:
     std::shared_ptr<Folder> m_rootFolder;
+    std::vector<std::weak_ptr<Feed>> m_feeds;
 };
 
 template<typename Container>
@@ -81,6 +84,10 @@ bool FeedsModel::addItem(const std::shared_ptr<FeedsModelItem> &item,
     auto folder = getFolder(path).lock();
     if (folder) {
         folder->addItem(item);
+        if (item->type() == FeedsModelItem::Type::FEED) {
+            const auto ptr = std::static_pointer_cast<Feed>(item);
+            m_feeds.emplace_back(ptr);
+        }
         return true;
     }
     return false;

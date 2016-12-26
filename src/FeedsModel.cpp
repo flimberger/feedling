@@ -177,4 +177,9 @@ std::weak_ptr<Feed> FeedsModel::getFeed(QUrl feedUrl)
     return std::weak_ptr<Feed>();
 }
 
+const std::vector<std::weak_ptr<Feed>> &FeedsModel::feeds() const
+{
+    return m_feeds;
+}
+
 }  // namespace feedling

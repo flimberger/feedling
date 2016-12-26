@@ -35,4 +35,9 @@ const std::vector<Entry> &Feed::entries() const
     return m_entries;
 }
 
+void Feed::addEntry(Entry &&entry)
+{
+    m_entries.emplace_back(entry);
+}
+
 }  // namespace feedling

@@ -25,6 +25,8 @@ public:
 
     const std::vector<Entry> &entries() const;
 
+    void addEntry(Entry &&entry);
+
 private:
     QString m_description;
     QUrl m_url;
