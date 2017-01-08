@@ -2,9 +2,9 @@
 
 #include <iterator>
 #include <vector>
+#include <utility>
 
 #include <QtCore/QtDebug>
-#include <QtCore/QUrl>
 
 #include <QtNetwork/QNetworkRequest>
 #include <QtNetwork/QNetworkReply>
@@ -14,28 +14,28 @@
 #include "EntriesModel.hpp"
 #include "Feed.hpp"
 #include "FeedParser.hpp"
+#include "View.hpp"
 
 namespace feedling {
 
-Application::Application(QObject *parent)
-  : QObject(parent),
-    m_network(new QNetworkAccessManager(this))
+Application::Application(std::unique_ptr<View> &&view, QObject *parent)
+  : QObject{parent},
+    m_network{new QNetworkAccessManager(this)},
+    m_view{std::move(view)}
 {
     connect(m_network, &QNetworkAccessManager::finished,
             this,      &Application::onFeedDownloadFinished);
-    onCreated();
+    init();
 }
 
 Application::~Application() = default;
 
-void Application::onCreated()
+void Application::init()
 {
+    m_view->init();
+    m_view->setEntriesModel(&m_feedsModel);
     // TODO: make this asynchronous
     getFeedsFromConfig();
-
-    m_qmlAppEngine.rootContext()->setContextProperty("g_app", this);
-    m_qmlAppEngine.rootContext()->setContextProperty("feedsModel", &m_feedsModel);
-    m_qmlAppEngine.load(QUrl("qrc:///ui/main.qml"));
 }
 
 void Application::onFetchFeeds()
@@ -52,7 +52,7 @@ void Application::setEntryList(QUrl url)
     auto ptr = m_feedsModel.getFeed(url).lock();
     if (ptr) {
         m_entriesModel = std::make_unique<EntriesModel>(ptr);
-        m_qmlAppEngine.rootContext()->setContextProperty("g_entriesModel", m_entriesModel.get());
+        m_view->setEntriesModel(m_entriesModel.get());
     }
 }
 

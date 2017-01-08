@@ -8,12 +8,12 @@ set(feedling_SRCS
     FeedsModel.cpp
     FeedsModelItem.cpp
     Folder.cpp
-    ../res/feedling.qrc
+    View.cpp
+    ui/MainWindow.cpp
 )
 
 add_executable(feedling ${feedling_SRCS})
 target_link_libraries(feedling
     Qt5::Network
-    Qt5::Quick
     Qt5::Widgets
 )

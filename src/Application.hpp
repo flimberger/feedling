@@ -1,12 +1,13 @@
 #ifndef FEEDLING_APPLICATION_HPP
 #define FEEDLING_APPLICATION_HPP
 
+#include <memory>
+
 #include <QtCore/QObject>
 #include <QtCore/QTimer>
+#include <QtCore/QUrl>  // needed by moc
 
 #include <QtNetwork/QNetworkAccessManager>
-
-#include <QtQml/QQmlApplicationEngine>
 
 #include "FeedsModel.hpp"
 
@@ -15,15 +16,16 @@ class QNetworkReply;
 namespace feedling {
 
 class EntriesModel;
+class View;
 
 class Application : public QObject
 {
     Q_OBJECT
 public:
-    explicit Application(QObject *parent=nullptr);
+    explicit Application(std::unique_ptr<View> &&view, QObject *parent=nullptr);
     ~Application();
 
-    Q_SLOT void onCreated();
+    Q_SLOT void init();
     Q_SLOT void onFetchFeeds();
 
     Q_INVOKABLE void setEntryList(QUrl url);
@@ -35,7 +37,7 @@ private:
 
     QTimer m_timer;
     QNetworkAccessManager *m_network;
-    QQmlApplicationEngine m_qmlAppEngine;
+    std::unique_ptr<View> m_view;
     FeedsModel m_feedsModel;
     std::unique_ptr<EntriesModel> m_entriesModel;
 };

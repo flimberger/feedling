@@ -14,17 +14,30 @@ set(feedling_VERSION_MINOR  "1")
 set(feedling_VERSION_PATCH  "0-prealpha")
 
 find_package(Qt5 REQUIRED COMPONENTS
-    Core
-    Gui
     Network
-    Quick
     Widgets)
 
 if (("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
     OR
     ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU"))
-    add_definitions(-Wall -Wpedantic)
-    add_definitions(-fno-rtti -fno-exceptions)
+    add_definitions(
+        -fno-rtti
+        -fno-exceptions
+    )
+    if ("${CMAKE_CXX_COMPILER}" STREQUAL "Clang")
+        add_definitions(
+            -fcolor-diagnostics
+            -Weverything
+            -Wno-c++98-compat
+            -Wno-padded
+            -Wno-unknown-pragmas # Thanks, Qt
+        )
+    else()
+        add_definitions(
+            -Wall
+            -Wpedantic
+        )
+    endif()
 endif()
 
 add_subdirectory(src)
