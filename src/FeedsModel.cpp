@@ -128,24 +128,16 @@ QHash<int, QByteArray> FeedsModel::roleNames() const
     return roles;
 }
 
-int FeedsModel::rowCount(const QModelIndex &index) const
+int FeedsModel::rowCount(const QModelIndex &parent) const
 {
-    if (index.column() > 0) {
+    if (!parent.isValid()) {
+        return m_rootFolder->size();
+    }
+    if (parent.column() > 0) {
         return 0;
     }
-
-    int count = 0;
-
-    TreeItem *item;
-    if (index.isValid()) {
-        item = static_cast<TreeItem *>(index.internalPointer());
-    } else {
-        item = const_cast<Folder *>(m_rootFolder.get());
-    }
-    if (item->type() == TreeItem::Type::FOLDER) {
-        count = static_cast<Folder *>(item)->size();
-    }
-    return count;
+    const auto *ptr = static_cast<Folder *>(parent.internalPointer());
+    return ptr->size();
 }
 
 
