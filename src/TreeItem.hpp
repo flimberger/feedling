@@ -26,9 +26,12 @@ public:
 
 protected:
     TreeItem(QString name, Type type);
-    void setFolder(const std::shared_ptr<Folder> &newFolder);
 
 private:
+    friend class Folder;
+
+    void setFolder(const std::shared_ptr<Folder> &newFolder);
+
     QString m_name;
     std::weak_ptr<Folder> m_folder;
     Type m_type;

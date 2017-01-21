@@ -18,7 +18,7 @@ const std::vector<std::shared_ptr<TreeItem>> &Folder::items() const
 void Folder::addItem(const std::shared_ptr<TreeItem> &item)
 {
     m_items.emplace_back(item);
-    // item->setFolder(nullptr);// shared_from_this());
+    item->setFolder(shared_from_this());
 }
 
 int Folder::size() const

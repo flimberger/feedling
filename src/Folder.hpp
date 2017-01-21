@@ -8,7 +8,7 @@
 
 namespace feedling {
 
-class Folder : public TreeItem //, public std::enable_shared_from_this<Folder>
+class Folder : public TreeItem, public std::enable_shared_from_this<Folder>
 {
 public:
     Folder(QString name);
