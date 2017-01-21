@@ -29,20 +29,11 @@ int FeedsModel::columnCount(const QModelIndex &parent) const
 QVariant FeedsModel::data(const QModelIndex &index, int role) const
 {
     if (index.isValid()) {
-        const auto *item = static_cast<const TreeItem *>(index.internalPointer());
-        if (role == Roles::NAME) {
+        const auto *item = static_cast<TreeItem *>(index.internalPointer());
+        switch (role) {
+        case Qt::DisplayRole:
+        case Roles::NAME:
             return item->name();
-        } else if (role == Roles::TYPE) {
-            return static_cast<int>(item->type());
-        } else {
-            if (item->type() == TreeItem::Type::FEED) {
-                const auto *feed = static_cast<const Feed *>(index.internalPointer());
-                if (role == Roles::DESCRIPTION) {
-                    return feed->description();
-                } else if (role == Roles::URL) {
-                    return feed->url();
-                }
-            }
         }
     }
     return QVariant();
