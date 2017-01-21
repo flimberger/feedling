@@ -1,5 +1,6 @@
 #include "FeedsModel.hpp"
 
+#include <algorithm>
 #include <climits>
 #include <deque>
 
@@ -85,18 +86,20 @@ QModelIndex FeedsModel::index(int row, int column, const QModelIndex &parent) co
     return QModelIndex();
 }
 
-QModelIndex FeedsModel::parent(const QModelIndex &index) const
+QModelIndex FeedsModel::parent(const QModelIndex &child) const
 {
-    if (index.isValid()) {
-        auto item = static_cast<TreeItem *>(index.internalPointer());
+    if (child.isValid()) {
+        const auto *item = static_cast<TreeItem *>(child.internalPointer());
         auto parent = item->folder().lock();
         if (parent && (parent != m_rootFolder)) {
-            int row = 0;
-            for (const auto &i : parent->items()) {
-                if (i->name() == item->name()) {
-                    break;
-                }
-                row++;
+            int row = -1;
+            const auto &items = parent->items();
+            const auto it = std::find_if(std::cbegin(items), std::cend(items),
+                                         [item](const std::shared_ptr<TreeItem> &p) {
+                    return p.get() == item;
+            });
+            if (it != std::cend(items)) {
+                row = it - std::cbegin(items);
             }
             return createIndex(row, 0, parent.get());
         }
