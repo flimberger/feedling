@@ -40,4 +40,9 @@ std::shared_ptr<TreeItem> Folder::getItem(QString name) const
     return nullptr;
 }
 
+std::shared_ptr<TreeItem> Folder::getItem(int idx) const {
+    Q_ASSERT(idx >= 0);
+    return m_items[static_cast<decltype(m_items)::size_type>(idx)];
+}
+
 }  // namespace feedling

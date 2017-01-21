@@ -71,7 +71,7 @@ QModelIndex FeedsModel::index(int row, int column, const QModelIndex &parent) co
     if (parentItem->type() == TreeItem::Type::FOLDER) {
         auto *folder = static_cast<Folder *>(parentItem);
         if (row < folder->size()) {
-            return createIndex(row, column, folder->items()[row].get());
+            return createIndex(row, column, folder->getItem(row).get());
         }
     }
     return QModelIndex();

@@ -19,6 +19,7 @@ public:
 
     int size() const;
     std::shared_ptr<TreeItem> getItem(QString name) const;
+    std::shared_ptr<TreeItem> getItem(int idx) const;
 
 private:
     std::vector<std::shared_ptr<TreeItem>> m_items;
