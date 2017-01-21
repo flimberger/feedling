@@ -6,8 +6,8 @@ set(feedling_SRCS
     Feed.cpp
     FeedParser.cpp
     FeedsModel.cpp
-    FeedsModelItem.cpp
     Folder.cpp
+    TreeItem.cpp
     View.cpp
     ui/MainWindow.cpp
 )

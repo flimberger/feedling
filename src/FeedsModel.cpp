@@ -28,13 +28,13 @@ int FeedsModel::columnCount(const QModelIndex &parent) const
 QVariant FeedsModel::data(const QModelIndex &index, int role) const
 {
     if (index.isValid()) {
-        const auto *item = static_cast<const FeedsModelItem *>(index.internalPointer());
+        const auto *item = static_cast<const TreeItem *>(index.internalPointer());
         if (role == Roles::NAME) {
             return item->name();
         } else if (role == Roles::TYPE) {
             return static_cast<int>(item->type());
         } else {
-            if (item->type() == FeedsModelItem::Type::FEED) {
+            if (item->type() == TreeItem::Type::FEED) {
                 const auto *feed = static_cast<const Feed *>(index.internalPointer());
                 if (role == Roles::DESCRIPTION) {
                     return feed->description();
@@ -70,14 +70,14 @@ QModelIndex FeedsModel::index(int row, int column, const QModelIndex &parent) co
         return QModelIndex();
     }
 
-    FeedsModelItem *parentItem;
+    TreeItem *parentItem;
     if (parent.isValid()) {
-        parentItem = static_cast<FeedsModelItem *>(parent.internalPointer());
+        parentItem = static_cast<TreeItem *>(parent.internalPointer());
     } else {
         parentItem = const_cast<Folder *>(m_rootFolder.get());
     }
     switch (parentItem->type()) {
-        case FeedsModelItem::Type::FEED: {
+        case TreeItem::Type::FEED: {
             auto *feed = static_cast<Feed *>(parentItem);
             const auto &entries = feed->entries();
             Q_ASSERT(entries.size() != INT_MAX);
@@ -86,7 +86,7 @@ QModelIndex FeedsModel::index(int row, int column, const QModelIndex &parent) co
             }
             break;
         }
-        case FeedsModelItem::Type::FOLDER: {
+        case TreeItem::Type::FOLDER: {
             auto *folder = static_cast<Folder *>(parentItem);
             if (row < folder->size()) {
                 return createIndex(row, column, folder->items()[row].get());
@@ -100,7 +100,7 @@ QModelIndex FeedsModel::index(int row, int column, const QModelIndex &parent) co
 QModelIndex FeedsModel::parent(const QModelIndex &index) const
 {
     if (index.isValid()) {
-        auto item = static_cast<FeedsModelItem *>(index.internalPointer());
+        auto item = static_cast<TreeItem *>(index.internalPointer());
         auto parent = item->folder().lock();
         if (parent && (parent != m_rootFolder)) {
             int row = 0;
@@ -136,13 +136,13 @@ int FeedsModel::rowCount(const QModelIndex &index) const
 
     int count = 0;
 
-    FeedsModelItem *item;
+    TreeItem *item;
     if (index.isValid()) {
-        item = static_cast<FeedsModelItem *>(index.internalPointer());
+        item = static_cast<TreeItem *>(index.internalPointer());
     } else {
         item = const_cast<Folder *>(m_rootFolder.get());
     }
-    if (item->type() == FeedsModelItem::Type::FOLDER) {
+    if (item->type() == TreeItem::Type::FOLDER) {
         count = static_cast<Folder *>(item)->size();
     }
     return count;
@@ -160,14 +160,14 @@ std::weak_ptr<Feed> FeedsModel::getFeed(QUrl feedUrl)
 
         for (const auto &item : currentFolder->items()) {
             switch (item->type()) {
-                case FeedsModelItem::Type::FEED: {
+                case TreeItem::Type::FEED: {
                     const auto feed = std::static_pointer_cast<Feed>(item);
                     if (feed->url() == feedUrl) {
                         return feed;
                     }
                     break;
                 }
-                case FeedsModelItem::Type::FOLDER: {
+                case TreeItem::Type::FOLDER: {
                     folders.push_back(std::static_pointer_cast<Folder>(item));
                     break;
                 }

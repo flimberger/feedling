@@ -5,7 +5,7 @@
 namespace feedling {
 
 Feed::Feed(QString name, QString description, const QUrl &url)
-  : feedling::FeedsModelItem (name, FeedsModelItem::Type::FEED),
+  : feedling::TreeItem (name, TreeItem::Type::FEED),
     m_description(description),
     m_url(url)
 {}

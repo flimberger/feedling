@@ -52,7 +52,7 @@ public:
     std::weak_ptr<Folder> getFolder(const Container &path);
 
     template<typename Container>
-    bool addItem(const std::shared_ptr<FeedsModelItem> &item, const Container &path);
+    bool addItem(const std::shared_ptr<TreeItem> &item, const Container &path);
 
 private:
     std::shared_ptr<Folder> m_rootFolder;
@@ -68,7 +68,7 @@ std::weak_ptr<Folder> FeedsModel::getFolder(const Container &path)
     auto currentFolder = m_rootFolder;
     for (const auto &name : path) {
         auto subFolder = currentFolder->getItem(name);
-        if (!subFolder || (subFolder->type() != FeedsModelItem::Type::FOLDER)) {
+        if (!subFolder || (subFolder->type() != TreeItem::Type::FOLDER)) {
             break;
         } else {
             currentFolder = std::static_pointer_cast<Folder>(subFolder);
@@ -78,13 +78,13 @@ std::weak_ptr<Folder> FeedsModel::getFolder(const Container &path)
 }
 
 template<typename Container>
-bool FeedsModel::addItem(const std::shared_ptr<FeedsModelItem> &item,
+bool FeedsModel::addItem(const std::shared_ptr<TreeItem> &item,
                          const Container &path)
 {
     auto folder = getFolder(path).lock();
     if (folder) {
         folder->addItem(item);
-        if (item->type() == FeedsModelItem::Type::FEED) {
+        if (item->type() == TreeItem::Type::FEED) {
             const auto ptr = std::static_pointer_cast<Feed>(item);
             m_feeds.emplace_back(ptr);
         }

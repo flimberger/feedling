@@ -5,14 +5,14 @@
 
 #include <QtCore/QUrl>
 
-#include "FeedsModelItem.hpp"
+#include "TreeItem.hpp"
 #include "Entry.hpp"
 
 namespace feedling {
 
 class Folder;
 
-class Feed : public FeedsModelItem
+class Feed : public TreeItem
 {
 public:
     explicit Feed(QString name, QString description, const QUrl &url);

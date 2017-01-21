@@ -1,5 +1,5 @@
-#ifndef FEEDLING_FEEDMODELITEM_HPP
-#define FEEDLING_FEEDMODELITEM_HPP
+#ifndef FEEDLING_TREEITEM_HPP
+#define FEEDLING_TREEITEM_HPP
 
 #include <memory>
 
@@ -9,14 +9,14 @@ namespace feedling {
 
 class Folder;
 
-class FeedsModelItem
+class TreeItem
 {
 public:
     enum class Type {
         FEED,
         FOLDER
     };
-    virtual ~FeedsModelItem();
+    virtual ~TreeItem();
 
     QString name() const;
     void setName(QString newName);
@@ -25,7 +25,7 @@ public:
     Type type() const;
 
 protected:
-    FeedsModelItem(QString name, Type type);
+    TreeItem(QString name, Type type);
     void setFolder(const std::shared_ptr<Folder> &newFolder);
 
 private:
@@ -36,4 +36,4 @@ private:
 
 }  // namespace feedling
 
-#endif  // FEEDLING_FEEDMODELITEM_HPP
+#endif  // FEEDLING_TREEITEM_HPP
