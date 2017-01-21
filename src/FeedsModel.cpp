@@ -115,11 +115,13 @@ int FeedsModel::rowCount(const QModelIndex &parent) const
     if (!parent.isValid()) {
         return m_rootFolder->size();
     }
-    if (parent.column() > 0) {
-        return 0;
+    if (parent.column() == 0) {
+        const auto *item = static_cast<TreeItem *>(parent.internalPointer());
+        if (item->type() == TreeItem::Type::FOLDER) {
+            return static_cast<const Folder *>(item)->size();
+        }
     }
-    const auto *ptr = static_cast<Folder *>(parent.internalPointer());
-    return ptr->size();
+    return 0;
 }
 
 
