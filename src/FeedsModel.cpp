@@ -76,22 +76,10 @@ QModelIndex FeedsModel::index(int row, int column, const QModelIndex &parent) co
     } else {
         parentItem = const_cast<Folder *>(m_rootFolder.get());
     }
-    switch (parentItem->type()) {
-        case TreeItem::Type::FEED: {
-            auto *feed = static_cast<Feed *>(parentItem);
-            const auto &entries = feed->entries();
-            Q_ASSERT(entries.size() != INT_MAX);
-            if (row < static_cast<int>(entries.size())) {
-                return createIndex(row, column, const_cast<Entry *>(&entries[row]));
-            }
-            break;
-        }
-        case TreeItem::Type::FOLDER: {
-            auto *folder = static_cast<Folder *>(parentItem);
-            if (row < folder->size()) {
-                return createIndex(row, column, folder->items()[row].get());
-            }
-            break;
+    if (parentItem->type() == TreeItem::Type::FOLDER) {
+        auto *folder = static_cast<Folder *>(parentItem);
+        if (row < folder->size()) {
+            return createIndex(row, column, folder->items()[row].get());
         }
     }
     return QModelIndex();
