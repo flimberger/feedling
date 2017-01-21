@@ -33,7 +33,7 @@ Application::~Application() = default;
 void Application::init()
 {
     m_view->init();
-    m_view->setEntriesModel(&m_feedsModel);
+    m_view->setFeedsModel(&m_feedsModel);
     // TODO: make this asynchronous
     getFeedsFromConfig();
 }
