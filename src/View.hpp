@@ -5,11 +5,13 @@ class QAbstractItemModel;
 
 namespace feedling {
 
+class Presenter;
+
 class View {
 public:
     virtual ~View();
 
-    virtual void init() = 0;
+    virtual void init(Presenter *presenter) = 0;
     virtual void setFeedsModel(QAbstractItemModel *model) = 0;
     virtual void setEntriesModel(QAbstractItemModel *model) = 0;
 };

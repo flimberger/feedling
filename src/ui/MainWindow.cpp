@@ -5,6 +5,8 @@
 #include <QtWidgets/QTextEdit>
 #include <QtWidgets/QTreeView>
 
+#include "../Presenter.hpp"
+
 namespace feedling {
 namespace ui {
 
@@ -23,12 +25,16 @@ MainWindow::MainWindow(QWidget *parent)
     auto *widget = new QWidget;
     widget->setLayout(layout);
     setCentralWidget(widget);
+
+    QObject::connect(m_feeds, &QTreeView::clicked, this, &MainWindow::onFeedClicked);
+    QObject::connect(m_entries, &QListView::clicked, this, &MainWindow::onEntryClicked);
 }
 
 MainWindow::~MainWindow() = default;
 
-void MainWindow::init()
+void MainWindow::init(Presenter *presenter)
 {
+    m_presenter = presenter;
     show();
 }
 
@@ -40,6 +46,16 @@ void MainWindow::setFeedsModel(QAbstractItemModel *model)
 void MainWindow::setEntriesModel(QAbstractItemModel *model)
 {
     m_entries->setModel(model);
+}
+
+void MainWindow::onFeedClicked(const QModelIndex &idx)
+{
+    m_presenter->selectFeed(idx);
+}
+
+void MainWindow::onEntryClicked(const QModelIndex &idx)
+{
+    m_presenter->selectEntry(idx);
 }
 
 }  // namespace ui

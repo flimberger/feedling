@@ -32,7 +32,7 @@ Application::~Application() = default;
 
 void Application::init()
 {
-    m_view->init();
+    m_view->init(this);
     m_view->setFeedsModel(&m_feedsModel);
     // TODO: make this asynchronous
     getFeedsFromConfig();
@@ -54,6 +54,20 @@ void Application::setEntryList(QUrl url)
         m_entriesModel = std::make_unique<EntriesModel>(ptr);
         m_view->setEntriesModel(m_entriesModel.get());
     }
+}
+
+void Application::selectFeed(const QModelIndex &index)
+{
+    auto feed = m_feedsModel.getItem(index);
+    if (feed) {
+        // Edit entryModel and set it
+        qDebug() << feed->name() << "selected";
+    }
+}
+
+void Application::selectEntry(const QModelIndex &index)
+{
+    //
 }
 
 void Application::onFeedDownloadFinished(QNetworkReply *reply)

@@ -158,4 +158,19 @@ const std::vector<std::weak_ptr<Feed>> &FeedsModel::feeds() const
     return m_feeds;
 }
 
+std::shared_ptr<Feed> FeedsModel::getItem(const QModelIndex &index)
+{
+    if (index.isValid()) {
+        const auto *ptr = index.internalPointer();
+        auto it = std::find_if(std::cbegin(m_feeds), std::cend(m_feeds),
+                               [ptr] (const std::weak_ptr<Feed> &item) {
+            return item.lock().get() == ptr;
+        });
+        if (it != std::cend(m_feeds)) {
+            return it->lock();
+        }
+    }
+    return nullptr;
+}
+
 }  // namespace feedling

@@ -10,6 +10,7 @@
 #include <QtNetwork/QNetworkAccessManager>
 
 #include "FeedsModel.hpp"
+#include "Presenter.hpp"
 
 class QNetworkReply;
 
@@ -18,7 +19,7 @@ namespace feedling {
 class EntriesModel;
 class View;
 
-class Application : public QObject
+class Application : public QObject, Presenter
 {
     Q_OBJECT
 public:
@@ -29,6 +30,9 @@ public:
     Q_SLOT void onFetchFeeds();
 
     Q_INVOKABLE void setEntryList(QUrl url);
+
+    void selectFeed(const QModelIndex &index) override;
+    void selectEntry(const QModelIndex &index) override;
 
 private:
     Q_SLOT void onFeedDownloadFinished(QNetworkReply *reply);

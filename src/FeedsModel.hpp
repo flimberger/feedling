@@ -48,6 +48,8 @@ public:
     std::weak_ptr<Feed> getFeed(QUrl feedUrl);
     const std::vector<std::weak_ptr<Feed>> &feeds() const;
 
+    std::shared_ptr<Feed> getItem(const QModelIndex &index);
+
     template<typename Container>
     std::weak_ptr<Folder> getFolder(const Container &path);
 
