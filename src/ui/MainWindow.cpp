@@ -2,8 +2,8 @@
 
 #include <QtGui/QTextCursor>
 #include <QtGui/QTextDocument>
-#include <QtWidgets/QGridLayout>
 #include <QtWidgets/QListView>
+#include <QtWidgets/QSplitter>
 #include <QtWidgets/QTextEdit>
 #include <QtWidgets/QTreeView>
 
@@ -20,14 +20,13 @@ MainWindow::MainWindow(QWidget *parent)
     m_entries{new QListView{this}},
     m_entryView{ new QTextEdit{this}}
 {
-    auto *layout = new QGridLayout;
-    layout->addWidget(m_feeds, 0, 0, -1, 1);
-    layout->addWidget(m_entries, 0, 1);
-    m_entryView->setReadOnly(true);
-    layout->addWidget(m_entryView, 1, 1);
-    auto *widget = new QWidget;
-    widget->setLayout(layout);
-    setCentralWidget(widget);
+    auto innerSplitter = std::make_unique<QSplitter>(Qt::Vertical);
+    innerSplitter->addWidget(m_entries);
+    innerSplitter->addWidget(m_entryView);
+    auto outerSplitter = std::make_unique<QSplitter>();
+    outerSplitter->addWidget(m_feeds);
+    outerSplitter->addWidget(innerSplitter.release());
+    setCentralWidget(outerSplitter.release());
 
     QObject::connect(m_feeds, &QTreeView::clicked, this, &MainWindow::onFeedClicked);
     QObject::connect(m_entries, &QListView::clicked, this, &MainWindow::onEntryClicked);
