@@ -5,15 +5,15 @@
 
 #include <QtCore/QByteArray>
 #include <QtCore/QHash>
+#include <QtCore/QVector>
 
 #include "Entry.hpp"
 #include "Feed.hpp"
 
 namespace feedling {
 
-EntriesModel::EntriesModel(std::shared_ptr<Feed> feed, QObject *parent)
-  : QAbstractListModel (parent),
-    m_feed(feed)
+EntriesModel::EntriesModel(QObject *parent)
+  : QAbstractListModel (parent)
 {}
 
 EntriesModel::~EntriesModel() = default;
@@ -30,6 +30,7 @@ QVariant EntriesModel::data(const QModelIndex &index, int role) const
         case Roles::DATETIME:
             data.setValue<QDateTime>(entry->dateTime());
             break;
+        case Qt::DisplayRole:
         case Roles::TITLE:
             data.setValue<QString>(entry->title());
             break;
@@ -44,11 +45,9 @@ QModelIndex EntriesModel::index(int row, int column, const QModelIndex &parent) 
     Q_UNUSED(column);
 
     auto index = QModelIndex();
-    const auto &entries = m_feed->entries();
-    const auto idx = static_cast<std::vector<Entry>::size_type>(row);
 
-    if (idx < entries.size()) {
-        index = createIndex(row, column, const_cast<Entry *>(&entries[idx]));
+    if ((row >= 0) && (row < m_feed->size())) {
+        index = createIndex(row, column, m_feed->getEntry(row).get());
     }
 
     return index;
@@ -68,9 +67,16 @@ QHash<int, QByteArray> EntriesModel::roleNames() const
 int EntriesModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
-    Q_ASSERT(m_feed->entries().size() < INT_MAX);
 
-    return static_cast<int>(m_feed->entries().size());
+    return m_feed->size();
+}
+
+void EntriesModel::setFeed(const std::shared_ptr<Feed> &feed)
+{
+    m_feed = feed;
+    emit dataChanged(index(0, 0, QModelIndex{}),
+                     index(feed->size() - 1, 0, QModelIndex{}),
+                     QVector<int>{Qt::DisplayRole, Roles::CONTENT, Roles::DATETIME, Roles::TITLE});
 }
 
 }  // feedling

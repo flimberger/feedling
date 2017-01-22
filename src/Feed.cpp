@@ -30,12 +30,18 @@ void Feed::setUrl(const QUrl &newUrl)
     m_url = newUrl;
 }
 
-const std::vector<Entry> &Feed::entries() const
+int Feed::size() const
 {
-    return m_entries;
+    return static_cast<int>(m_entries.size());
 }
 
-void Feed::addEntry(Entry &&entry)
+std::shared_ptr<Entry> Feed::getEntry(int idx) const
+{
+    Q_ASSERT(idx >= 0);
+    return m_entries[static_cast<decltype (m_entries)::size_type>(idx)];
+}
+
+void Feed::addEntry(std::shared_ptr<Entry> &&entry)
 {
     m_entries.emplace_back(entry);
 }

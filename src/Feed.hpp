@@ -23,14 +23,15 @@ public:
     const QUrl &url() const;
     void setUrl(const QUrl &newUrl);
 
-    const std::vector<Entry> &entries() const;
+    int size() const;
+    std::shared_ptr<Entry> getEntry(int idx) const;
 
-    void addEntry(Entry &&entry);
+    void addEntry(std::shared_ptr<Entry> &&entry);
 
 private:
     QString m_description;
     QUrl m_url;
-    std::vector<Entry> m_entries;
+    std::vector<std::shared_ptr<Entry>> m_entries;
 };
 
 }  // namespace feedling

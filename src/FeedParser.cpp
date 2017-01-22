@@ -36,7 +36,7 @@ void FeedParser::parseXml() {
         } else if (m_xmlReader->isEndElement()) {
             if (m_xmlReader->name() == TAGNAME_ITEM) {
                 // create entry
-                m_feed->addEntry(Entry{title, content, pubDate, m_feed});
+                m_feed->addEntry(std::make_shared<Entry>(title, content, pubDate, m_feed));
                 // Clear strings
                 content.clear();
                 descr.clear();

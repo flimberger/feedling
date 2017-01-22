@@ -15,18 +15,20 @@ class EntriesModel : public QAbstractListModel
 
 public:
     enum Roles {
-        CONTENT,
+        CONTENT = Qt::UserRole + 1,
         DATETIME,
         TITLE
     };
 
-    EntriesModel(std::shared_ptr<Feed> feed, QObject *parent=nullptr);
+    EntriesModel(QObject *parent=nullptr);
     virtual ~EntriesModel();
 
     virtual QVariant data(const QModelIndex &index, int role) const override;
     QModelIndex index(int row, int column, const QModelIndex &parent) const override;
     virtual QHash<int, QByteArray> roleNames() const override;
     virtual int rowCount(const QModelIndex &parent=QModelIndex()) const override;
+
+    void setFeed(const std::shared_ptr<Feed> &feed);
 
 private:
     std::shared_ptr<Feed> m_feed;

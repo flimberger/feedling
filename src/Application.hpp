@@ -9,6 +9,7 @@
 
 #include <QtNetwork/QNetworkAccessManager>
 
+#include "EntriesModel.hpp"
 #include "FeedsModel.hpp"
 #include "Presenter.hpp"
 
@@ -16,7 +17,6 @@ class QNetworkReply;
 
 namespace feedling {
 
-class EntriesModel;
 class View;
 
 class Application : public QObject, Presenter
@@ -43,7 +43,7 @@ private:
     QNetworkAccessManager *m_network;
     std::unique_ptr<View> m_view;
     FeedsModel m_feedsModel;
-    std::unique_ptr<EntriesModel> m_entriesModel;
+    EntriesModel m_entriesModel;
 };
 
 }  // namespace feedling
