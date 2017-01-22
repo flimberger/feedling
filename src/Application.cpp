@@ -20,6 +20,7 @@ namespace feedling {
 
 Application::Application(std::unique_ptr<View> &&view, QObject *parent)
   : QObject{parent},
+    Presenter{},
     m_network{new QNetworkAccessManager(this)},
     m_view{std::move(view)}
 {
