@@ -68,7 +68,10 @@ int EntriesModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
 
-    return m_feed->size();
+    if (m_feed) {
+        return m_feed->size();
+    }
+    return 0;
 }
 
 void EntriesModel::setFeed(const std::shared_ptr<Feed> &feed)
