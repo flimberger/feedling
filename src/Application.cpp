@@ -49,14 +49,6 @@ void Application::onFetchFeeds()
     }
 }
 
-void Application::setEntryList(QUrl url)
-{
-    auto ptr = m_feedsModel.getFeed(url).lock();
-    if (ptr) {
-        m_entriesModel.setFeed(ptr);
-    }
-}
-
 void Application::selectFeed(const QModelIndex &index)
 {
     auto feed = m_feedsModel.getItem(index);
@@ -76,12 +68,12 @@ void Application::onFeedDownloadFinished(QNetworkReply *reply)
     const auto &url = reply->url();
     auto feed = m_feedsModel.getFeed(url).lock();
     if (feed) {
-        qDebug() << "Parsing " << url;
+        // qDebug() << "Parsing " << url;
         FeedParser parser{feed, reply};
         parser.parseXml();
-        for (const auto &e : feed->entries()) {
-            qDebug() << e.title() << e.dateTime().toString() << e.content();
-        }
+        // for (const auto &e : feed->entries()) {
+            // qDebug() << e.title() << e.dateTime().toString() << e.content();
+        // }
     } else {
         qWarning() << "unknown URL:" << url;
     }
@@ -102,14 +94,14 @@ void Application::getFeedsFromConfig()
     Q_ASSERT(success);
     success = m_feedsModel.addItem<std::vector<QString>>(std::make_shared<Folder>(graphicsPath[0]), std::vector<QString>{});
     Q_ASSERT(success);
-//    success = m_feedsModel.addItem<std::vector<QString>>(std::make_shared<Feed>("Qt Blog", "The official Qt Blog", QUrl("http://blog.qt.io/feed")), progQtPath);
-//    Q_ASSERT(success);
-//    success = m_feedsModel.addItem<std::vector<QString>>(std::make_shared<Feed>("KDAB Blogs", "KDAB Blogs", QUrl("https://www.kdab.com/category/blogs/feed/")), progQtPath);
-//    Q_ASSERT(success);
+    success = m_feedsModel.addItem<std::vector<QString>>(std::make_shared<Feed>("Qt Blog", "The official Qt Blog", QUrl("http://blog.qt.io/feed")), progQtPath);
+    Q_ASSERT(success);
+    success = m_feedsModel.addItem<std::vector<QString>>(std::make_shared<Feed>("KDAB Blogs", "KDAB Blogs", QUrl("https://www.kdab.com/category/blogs/feed/")), progQtPath);
+    Q_ASSERT(success);
     success = m_feedsModel.addItem<std::vector<QString>>(std::make_shared<Feed>("Pushing Pixels", "Kirill Grouchnikovs Blog", QUrl("http://www.pushing-pixels.org/feed")), graphicsPath);
     Q_ASSERT(success);
-
-    setEntryList(QUrl("http://blog.qt.io/feed"));
+    success = m_feedsModel.addItem<std::vector<QString>>(std::make_shared<Feed>("The ryg blog", "asdf", QUrl("https://fgiesen.wordpress.com/feed/")), std::vector<QString>{progQtPath[0]});
+    Q_ASSERT(success);
 }
 
 }  // namespace feedling

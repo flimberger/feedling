@@ -29,8 +29,6 @@ public:
     Q_SLOT void init();
     Q_SLOT void onFetchFeeds();
 
-    Q_INVOKABLE void setEntryList(QUrl url);
-
     void selectFeed(const QModelIndex &index) override;
     void selectEntry(const QModelIndex &index) override;
 
