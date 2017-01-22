@@ -79,4 +79,12 @@ void EntriesModel::setFeed(const std::shared_ptr<Feed> &feed)
                      QVector<int>{Qt::DisplayRole, Roles::CONTENT, Roles::DATETIME, Roles::TITLE});
 }
 
+std::shared_ptr<Entry> EntriesModel::getEntry(const QModelIndex &idx) const
+{
+    if (idx.isValid()) {
+        return static_cast<Entry *>(idx.internalPointer())->shared_from_this();
+    }
+    return std::shared_ptr<Entry>{};
+}
+
 }  // feedling

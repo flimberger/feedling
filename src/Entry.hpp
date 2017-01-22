@@ -10,7 +10,7 @@ namespace feedling {
 
 class Feed;
 
-class Entry
+class Entry : public std::enable_shared_from_this<Entry>
 {
 public:
     Entry(QString title, QString content, const QDateTime &dateTime,

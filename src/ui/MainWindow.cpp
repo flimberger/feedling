@@ -1,10 +1,13 @@
 #include "MainWindow.hpp"
 
+#include <QtGui/QTextCursor>
+#include <QtGui/QTextDocument>
 #include <QtWidgets/QGridLayout>
 #include <QtWidgets/QListView>
 #include <QtWidgets/QTextEdit>
 #include <QtWidgets/QTreeView>
 
+#include "../Entry.hpp"
 #include "../Presenter.hpp"
 
 namespace feedling {
@@ -48,6 +51,11 @@ void MainWindow::setEntriesModel(QAbstractItemModel *model)
     m_entries->setModel(model);
 }
 
+void MainWindow::showEntry(const std::shared_ptr<Entry> &entry)
+{
+    m_entryView->setDocument(createEntryView(entry).release());
+}
+
 void MainWindow::onFeedClicked(const QModelIndex &idx)
 {
     m_presenter->selectFeed(idx);
@@ -56,6 +64,14 @@ void MainWindow::onFeedClicked(const QModelIndex &idx)
 void MainWindow::onEntryClicked(const QModelIndex &idx)
 {
     m_presenter->selectEntry(idx);
+}
+
+std::unique_ptr<QTextDocument> MainWindow::createEntryView(const std::shared_ptr<Entry> &entry) const
+{
+    auto doc = std::make_unique<QTextDocument>();
+    auto crs = QTextCursor{doc.get()};
+    crs.insertHtml(entry->content());
+    return doc;
 }
 
 }  // namespace ui

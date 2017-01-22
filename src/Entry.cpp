@@ -6,7 +6,8 @@ namespace feedling {
 
 Entry::Entry(QString title, QString content, const QDateTime &dateTime,
              const std::shared_ptr<Feed> &feed)
-  : m_title(title),
+  : std::enable_shared_from_this<Entry>{},
+    m_title(title),
     m_content(content),
     m_dateTime(dateTime),
     m_feed(feed)

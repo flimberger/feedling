@@ -7,6 +7,7 @@
 
 namespace feedling {
 
+class Entry;
 class Feed;
 
 class EntriesModel : public QAbstractListModel
@@ -29,6 +30,7 @@ public:
     virtual int rowCount(const QModelIndex &parent=QModelIndex()) const override;
 
     void setFeed(const std::shared_ptr<Feed> &feed);
+    std::shared_ptr<Entry> getEntry(const QModelIndex &idx) const;
 
 private:
     std::shared_ptr<Feed> m_feed;

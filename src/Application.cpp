@@ -68,7 +68,7 @@ void Application::selectFeed(const QModelIndex &index)
 
 void Application::selectEntry(const QModelIndex &index)
 {
-    //
+    m_view->showEntry(m_entriesModel.getEntry(index));
 }
 
 void Application::onFeedDownloadFinished(QNetworkReply *reply)
