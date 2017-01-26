@@ -9,7 +9,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-set(feedling_VERSION_MAYOR  "0")
+set(feedling_VERSION_MAJOR  "0")
 set(feedling_VERSION_MINOR  "1")
 set(feedling_VERSION_PATCH  "0-prealpha")
 
@@ -20,12 +20,13 @@ find_package(Qt5 REQUIRED COMPONENTS
 if (("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
     OR
     ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU"))
-    add_definitions(
+    add_compile_options(
         -fno-rtti
         -fno-exceptions
     )
+    add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0x050500 -DQT_DEPRECATED_WARNINGS)
     if ("${CMAKE_CXX_COMPILER}" STREQUAL "Clang")
-        add_definitions(
+        add_compile_options(
             -fcolor-diagnostics
             -Weverything
             -Wno-c++98-compat
@@ -33,7 +34,7 @@ if (("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
             -Wno-unknown-pragmas # Thanks, Qt
         )
     else()
-        add_definitions(
+        add_compile_options(
             -Wall
             -Wpedantic
         )
