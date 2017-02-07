@@ -1,5 +1,6 @@
 #include "FeedParser.hpp"
 
+#include <QtCore/QtDebug>
 #include <QtCore/QDateTime>
 #include <QtCore/QXmlStreamReader>
 
@@ -17,9 +18,13 @@ static constexpr const char *TAGNAME_TITLE = "title";
 
 FeedParser::FeedParser(std::shared_ptr<Feed> feed, QIODevice *ioDevice, QObject *parent)
   : QObject{parent},
-    m_xmlReader{std::make_unique<QXmlStreamReader>(ioDevice)},
-    m_feed{feed}
-{}
+    m_xmlReader{std::make_unique<QXmlStreamReader>()},
+    m_feed{feed},
+    m_ioDevice{ioDevice},
+    m_parsing{false}
+{
+    QObject::connect(m_ioDevice, &QIODevice::readyRead, this, &FeedParser::onDataReady);
+}
 
 FeedParser::~FeedParser() = default;
 
@@ -30,6 +35,8 @@ void FeedParser::parseXml() {
     QDateTime pubDate;
     QString title;
 
+    auto url = m_feed->url().toString();
+    qDebug() << "Starting to parse " << url;
     while (!m_xmlReader->atEnd()) {
         m_xmlReader->readNext();
         if (m_xmlReader->isStartElement()) {
@@ -59,6 +66,25 @@ void FeedParser::parseXml() {
                 title = m_xmlReader->text().toString();
             }
         }
+    }
+    if (m_xmlReader->hasError()) {
+        if (m_xmlReader->error() == QXmlStreamReader::PrematureEndOfDocumentError) {
+            qDebug() << "Waiting for more data from " << url;
+        } else {
+            qDebug() << "Parsing of " << url << " failed";
+            emit done(false, m_feed);
+        }
+    } else {
+        qDebug() << "Parsing of " << url << " finished";
+        emit done(true, m_feed);
+    }
+}
+
+void FeedParser::onDataReady() {
+    m_xmlReader->addData(m_ioDevice->readAll());
+    if (!m_parsing) {
+        parseXml();
+        m_parsing = true;
     }
 }
 

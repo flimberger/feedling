@@ -69,13 +69,11 @@ void Application::parseFeed(QNetworkReply *reply)
     const auto &url = reply->url();
     auto feed = m_feedsModel.getFeed(url).lock();
     if (feed) {
-        // qDebug() << "Parsing " << url;
+        qDebug() << "Starting parser for " << url.toString();
         auto *parser = new FeedParser{feed, reply};
-        parser->parseXml();
         QObject::connect(parser, &FeedParser::done,
                          [parser, reply](bool success, const std::shared_ptr<Feed> &feed) {
-            Q_UNUSED(success);
-            Q_UNUSED(feed);
+            qDebug() << feed->url().toString() << " is done " << success;
             delete parser;  // TODO: maybe there should be a registry...
             reply->deleteLater();
         });
