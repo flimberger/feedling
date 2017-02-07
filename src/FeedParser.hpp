@@ -4,6 +4,7 @@
 #include <memory>
 #include <vector>
 
+#include <QtCore/QObject>
 #include <QtCore/QString>
 
 class QIODevice;
@@ -14,13 +15,18 @@ namespace feedling {
 class Entry;
 class Feed;
 
-class FeedParser
+class FeedParser : public QObject
 {
+    Q_OBJECT
+
 public:
-    explicit FeedParser(std::shared_ptr<Feed> feed, QIODevice *ioDevice);
+    explicit FeedParser(std::shared_ptr<Feed> feed, QIODevice *ioDevice, QObject *parent=nullptr);
     ~FeedParser();
 
     void parseXml();
+
+Q_SIGNALS:
+    void done(bool success, const std::shared_ptr<Feed> &feed);
 
 private:
     std::unique_ptr<QXmlStreamReader> m_xmlReader;

@@ -25,7 +25,7 @@ Application::Application(std::unique_ptr<View> &&view, QObject *parent)
     m_view{std::move(view)}
 {
     connect(m_network, &QNetworkAccessManager::finished,
-            this,      &Application::onFeedDownloadFinished);
+            this,      &Application::parseFeed);
     init();
 }
 
@@ -44,7 +44,8 @@ void Application::onFetchFeeds()
 {
     for (const auto &wref : m_feedsModel.feeds()) {
         if (const auto feed = wref.lock()) {
-            m_network->get(QNetworkRequest(feed->url()));
+            auto *reply = m_network->get(QNetworkRequest(feed->url()));
+            parseFeed(reply);
         }
     }
 }
@@ -63,22 +64,24 @@ void Application::selectEntry(const QModelIndex &index)
     m_view->showEntry(m_entriesModel.getEntry(index));
 }
 
-void Application::onFeedDownloadFinished(QNetworkReply *reply)
+void Application::parseFeed(QNetworkReply *reply)
 {
     const auto &url = reply->url();
     auto feed = m_feedsModel.getFeed(url).lock();
     if (feed) {
         // qDebug() << "Parsing " << url;
-        FeedParser parser{feed, reply};
-        parser.parseXml();
-        // for (const auto &e : feed->entries()) {
-            // qDebug() << e.title() << e.dateTime().toString() << e.content();
-        // }
+        auto *parser = new FeedParser{feed, reply};
+        parser->parseXml();
+        QObject::connect(parser, &FeedParser::done,
+                         [parser, reply](bool success, const std::shared_ptr<Feed> &feed) {
+            Q_UNUSED(success);
+            Q_UNUSED(feed);
+            delete parser;  // TODO: maybe there should be a registry...
+            reply->deleteLater();
+        });
     } else {
         qWarning() << "unknown URL:" << url;
     }
-
-    reply->deleteLater();
 }
 
 void Application::getFeedsFromConfig()

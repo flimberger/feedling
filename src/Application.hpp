@@ -33,7 +33,7 @@ public:
     void selectEntry(const QModelIndex &index) override;
 
 private:
-    Q_SLOT void onFeedDownloadFinished(QNetworkReply *reply);
+    void parseFeed(QNetworkReply *reply);
 
     void getFeedsFromConfig();
 

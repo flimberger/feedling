@@ -15,8 +15,9 @@ static constexpr const char *TAGNAME_LINK = "link";
 static constexpr const char *TAGNAME_PUBDATE = "pubDate";
 static constexpr const char *TAGNAME_TITLE = "title";
 
-FeedParser::FeedParser(std::shared_ptr<Feed> feed, QIODevice *ioDevice)
-  : m_xmlReader{std::make_unique<QXmlStreamReader>(ioDevice)},
+FeedParser::FeedParser(std::shared_ptr<Feed> feed, QIODevice *ioDevice, QObject *parent)
+  : QObject{parent},
+    m_xmlReader{std::make_unique<QXmlStreamReader>(ioDevice)},
     m_feed{feed}
 {}
 
