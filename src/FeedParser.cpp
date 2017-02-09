@@ -62,7 +62,7 @@ void FeedParser::parseXml() {
                 link = m_xmlReader->text().toString();
             } else if (m_currentTag == TAGNAME_PUBDATE) {
                 pubDate = QDateTime::fromString(m_xmlReader->text().toString());
-            } if (m_currentTag == TAGNAME_TITLE) {
+            } else if (m_currentTag == TAGNAME_TITLE) {
                 title = m_xmlReader->text().toString();
             }
         }
