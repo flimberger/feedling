@@ -44,8 +44,7 @@ void Application::onFetchFeeds()
 {
     for (const auto &wref : m_feedsModel.feeds()) {
         if (const auto feed = wref.lock()) {
-            auto *reply = m_network->get(QNetworkRequest(feed->url()));
-            parseFeed(reply);
+            parseFeed(m_network->get(QNetworkRequest(feed->url())));
         }
     }
 }
@@ -55,13 +54,17 @@ void Application::selectFeed(const QModelIndex &index)
     auto feed = m_feedsModel.getItem(index);
     if (feed) {
         m_entriesModel.setFeed(feed);
-        qDebug() << feed->name() << "selected";
+        qDebug() << feed->name() << " selected";
     }
 }
 
 void Application::selectEntry(const QModelIndex &index)
 {
-    m_view->showEntry(m_entriesModel.getEntry(index));
+    const auto &entry = m_entriesModel.getEntry(index);
+    if (entry) {
+        m_view->showEntry(entry);
+        qDebug() << entry->title() << " selected";
+    }
 }
 
 void Application::parseFeed(QNetworkReply *reply)

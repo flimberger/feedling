@@ -18,7 +18,7 @@ MainWindow::MainWindow(QWidget *parent)
     View{},
     m_feeds{new QTreeView{this}},
     m_entries{new QListView{this}},
-    m_entryView{ new QTextEdit{this}}
+    m_entryView{new QTextEdit{this}}
 {
     auto innerSplitter = std::make_unique<QSplitter>(Qt::Vertical);
     innerSplitter->addWidget(m_entries);
