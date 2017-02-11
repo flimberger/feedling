@@ -60,5 +60,27 @@ TEST_F(TestParser, TestBasicParsing) {
     ASSERT_STREQ(str(entry->content()), "A simple test entry");
 }
 
+TEST_F(TestParser, TestContinuedParsing)
 {
+    auto data0 = QByteArray{
+            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+            "<rss version=\"2.0\" xmlns:content=\"http://purl.org/rss/1.0/modules/content/\">"
+            "<channel>"
+            "<item><title>Simple Title</title><pubDate>2017-02-10T22:51</pubDate>"
+            "<link>http://purplekraken.com/blog/2017/02/10/entry</link>"
+    };
+    auto data1 = QByteArray{
+            "<description>A simple test entry</description>"
+            "<content:encoded>A simple test entry</content:encoded></item>"
+            "</channel></rss>"
+    };
+    m_parser.addData(data0);
+    const auto state0 = m_parser.parse();
+    ASSERT_EQ(state0, FeedParser::STATE_WAITING);
+    m_parser.addData(data1);
+    const auto state1 = m_parser.parse();
+    ASSERT_EQ(state1, FeedParser::STATE_SUCCEEDED);
+    const auto entry = m_feed->getEntry(0);
+    ASSERT_STREQ(str(entry->title()), "Simple Title");
+    ASSERT_STREQ(str(entry->content()), "A simple test entry");
 }
