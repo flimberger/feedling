@@ -27,8 +27,10 @@ public:
     explicit FeedParser(std::shared_ptr<Feed> feed);
     ~FeedParser();
 
-    State parse();
     void addData(const QByteArray &data);
+    State parse();
+
+    const std::shared_ptr<Feed> &feed() const;
     State state() const;
 
 private:

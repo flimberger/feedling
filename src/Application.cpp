@@ -11,6 +11,7 @@
 
 #include <QtQml/QQmlContext>
 
+#include "DownloadTask.hpp"
 #include "EntriesModel.hpp"
 #include "Feed.hpp"
 #include "FeedParser.hpp"
@@ -24,8 +25,6 @@ Application::Application(std::unique_ptr<View> &&view, QObject *parent)
     m_network{new QNetworkAccessManager(this)},
     m_view{std::move(view)}
 {
-    connect(m_network, &QNetworkAccessManager::finished,
-            this,      &Application::parseFeed);
     init();
 }
 
@@ -44,7 +43,7 @@ void Application::onFetchFeeds()
 {
     for (const auto &wref : m_feedsModel.feeds()) {
         if (const auto feed = wref.lock()) {
-            parseFeed(m_network->get(QNetworkRequest(feed->url())));
+            parseFeed(m_network->get(QNetworkRequest{feed->url()}));
         }
     }
 }
@@ -72,13 +71,11 @@ void Application::parseFeed(QNetworkReply *reply)
     const auto &url = reply->url();
     auto feed = m_feedsModel.getFeed(url).lock();
     if (feed) {
-        qDebug() << "Starting parser for " << url.toString();
-        auto *parser = new FeedParser{feed, reply};
-        QObject::connect(parser, &FeedParser::done,
-                         [parser, reply](bool success, const std::shared_ptr<Feed> &feed) {
-            qDebug() << feed->url().toString() << " is done " << success;
-            delete parser;  // TODO: maybe there should be a registry...
-            reply->deleteLater();
+        qDebug() << "Starting downloader for " << url.toString();
+        DownloadTask *downloadTask = new DownloadTask{feed, reply};
+        QObject::connect(downloadTask, &DownloadTask::done,
+                         [](bool success, const std::shared_ptr<Feed> &feed) {
+            qDebug() << feed->url() << "finished" << (success ? "successful" : "unsuccessful");
         });
     } else {
         qWarning() << "unknown URL:" << url;

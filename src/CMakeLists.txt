@@ -1,6 +1,7 @@
 set(feedling_SRCS
     feedling.cpp
     Application.cpp
+    DownloadTask.cpp
     Entry.cpp
     EntriesModel.cpp
     Feed.cpp

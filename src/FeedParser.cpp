@@ -26,6 +26,11 @@ FeedParser::~FeedParser() {
     qDebug() << "Parser for " << m_feed->url().toString() << " died";
 }
 
+void FeedParser::addData(const QByteArray &data)
+{
+    m_xmlReader->addData(data);
+}
+
 FeedParser::State FeedParser::parse() {
     auto url = m_feed->url().toString();
     qDebug() << "Starting to parse " << url;
@@ -76,9 +81,9 @@ FeedParser::State FeedParser::parse() {
     return m_state;
 }
 
-void FeedParser::addData(const QByteArray &data)
+const std::shared_ptr<Feed> &FeedParser::feed() const
 {
-    m_xmlReader->addData(data);
+    return m_feed;
 }
 
 FeedParser::State FeedParser::state() const
