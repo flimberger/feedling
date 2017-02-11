@@ -4,7 +4,6 @@
 #include <memory>
 #include <vector>
 
-#include <QtCore/QObject>
 #include <QtCore/QString>
 
 class QIODevice;
@@ -15,26 +14,27 @@ namespace feedling {
 class Entry;
 class Feed;
 
-class FeedParser : public QObject
+class FeedParser
 {
-    Q_OBJECT
-
 public:
-    explicit FeedParser(std::shared_ptr<Feed> feed, QIODevice *ioDevice, QObject *parent=nullptr);
+    enum State {
+        STATE_WAITING,
+        STATE_SUCCEEDED,
+        STATE_FAILED
+    };
+
+    explicit FeedParser(std::shared_ptr<Feed> feed);
     ~FeedParser();
 
-Q_SIGNALS:
-    void done(bool success, const std::shared_ptr<Feed> &feed);
+    State parse();
+    void addData(const QByteArray &data);
+    State state() const;
 
 private:
-    Q_SLOT void onDataReady();
-    void parseXml();
-
     std::unique_ptr<QXmlStreamReader> m_xmlReader;
     std::shared_ptr<Feed> m_feed;
-    QIODevice *m_ioDevice;
     QString m_currentTag;
-    bool m_parsing;
+    State m_state;
 };
 
 }  // namespace feedling

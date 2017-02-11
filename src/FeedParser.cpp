@@ -16,19 +16,18 @@ static constexpr const char *TAGNAME_LINK = "link";
 static constexpr const char *TAGNAME_PUBDATE = "pubDate";
 static constexpr const char *TAGNAME_TITLE = "title";
 
-FeedParser::FeedParser(std::shared_ptr<Feed> feed, QIODevice *ioDevice, QObject *parent)
-  : QObject{parent},
-    m_xmlReader{std::make_unique<QXmlStreamReader>()},
+FeedParser::FeedParser(std::shared_ptr<Feed> feed)
+  : m_xmlReader{std::make_unique<QXmlStreamReader>()},
     m_feed{feed},
-    m_ioDevice{ioDevice},
-    m_parsing{false}
+    m_state{STATE_WAITING}
 {
-    QObject::connect(m_ioDevice, &QIODevice::readyRead, this, &FeedParser::onDataReady);
 }
 
-FeedParser::~FeedParser() = default;
+FeedParser::~FeedParser() {
+    qDebug() << "Parser for " << m_feed->url().toString() << " died";
+}
 
-void FeedParser::parseXml() {
+FeedParser::State FeedParser::parse() {
     QString content;
     QString descr;
     QString link;
@@ -64,28 +63,35 @@ void FeedParser::parseXml() {
                 pubDate = QDateTime::fromString(m_xmlReader->text().toString());
             } else if (m_currentTag == TAGNAME_TITLE) {
                 title = m_xmlReader->text().toString();
+            } else {
+                qDebug() << "unknown tag " << m_currentTag;
             }
         }
     }
     if (m_xmlReader->hasError()) {
         if (m_xmlReader->error() == QXmlStreamReader::PrematureEndOfDocumentError) {
             qDebug() << "Waiting for more data from " << url;
+            m_state = STATE_WAITING;
         } else {
-            qDebug() << "Parsing of " << url << " failed";
-            emit done(false, m_feed);
+            qDebug() << "Parsing of " << url << " failed:" << m_xmlReader->errorString();
+            m_state = STATE_FAILED;
         }
     } else {
         qDebug() << "Parsing of " << url << " finished";
-        emit done(true, m_feed);
+        m_state = STATE_SUCCEEDED;
     }
+    return m_state;
 }
 
-void FeedParser::onDataReady() {
-    m_xmlReader->addData(m_ioDevice->readAll());
-    if (!m_parsing) {
-        parseXml();
-        m_parsing = true;
-    }
+void FeedParser::addData(const QByteArray &data)
+{
+    m_xmlReader->addData(data);
 }
+
+FeedParser::State FeedParser::state() const
+{
+    return m_state;
+}
+
 
 }  // namespace feedling
