@@ -1,7 +1,6 @@
 #include "FeedParser.hpp"
 
 #include <QtCore/QtDebug>
-#include <QtCore/QDateTime>
 #include <QtCore/QXmlStreamReader>
 
 #include "Entry.hpp"
@@ -28,12 +27,6 @@ FeedParser::~FeedParser() {
 }
 
 FeedParser::State FeedParser::parse() {
-    QString content;
-    QString descr;
-    QString link;
-    QDateTime pubDate;
-    QString title;
-
     auto url = m_feed->url().toString();
     qDebug() << "Starting to parse " << url;
     while (!m_xmlReader->atEnd()) {
@@ -43,26 +36,26 @@ FeedParser::State FeedParser::parse() {
         } else if (m_xmlReader->isEndElement()) {
             if (m_xmlReader->name() == TAGNAME_ITEM) {
                 // create entry
-                m_feed->addEntry(std::make_shared<Entry>(title, content, pubDate, m_feed));
+                m_feed->addEntry(std::make_shared<Entry>(m_title, m_content, m_pubDate, m_feed));
                 // Clear strings
-                content.clear();
-                descr.clear();
-                link.clear();
-                // pubDate.clear();
-                title.clear();
+                m_content.clear();
+                m_descr.clear();
+                m_link.clear();
+                // m_pubDate.clear();
+                m_title.clear();
             }
         } else if ((m_xmlReader->isCharacters() || m_xmlReader->isCDATA())
                    && !m_xmlReader->isWhitespace()) {
             if (m_currentTag == TAGNAME_CONTENT) {
-                content = m_xmlReader->text().toString();
+                m_content = m_xmlReader->text().toString();
             } else if (m_currentTag == TAGNAME_DESCR) {
-                descr = TAGNAME_DESCR;
+                m_descr = TAGNAME_DESCR;
             } else if (m_currentTag == TAGNAME_LINK) {
-                link = m_xmlReader->text().toString();
+                m_link = m_xmlReader->text().toString();
             } else if (m_currentTag == TAGNAME_PUBDATE) {
-                pubDate = QDateTime::fromString(m_xmlReader->text().toString());
+                m_pubDate = QDateTime::fromString(m_xmlReader->text().toString());
             } else if (m_currentTag == TAGNAME_TITLE) {
-                title = m_xmlReader->text().toString();
+                m_title = m_xmlReader->text().toString();
             } else {
                 qDebug() << "unknown tag " << m_currentTag;
             }

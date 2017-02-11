@@ -4,6 +4,7 @@
 #include <memory>
 #include <vector>
 
+#include <QtCore/QDateTime>
 #include <QtCore/QString>
 
 class QIODevice;
@@ -35,6 +36,13 @@ private:
     std::shared_ptr<Feed> m_feed;
     QString m_currentTag;
     State m_state;
+
+    // Entry fields
+    QString m_content;
+    QString m_descr;
+    QString m_link;
+    QDateTime m_pubDate;
+    QString m_title;
 };
 
 }  // namespace feedling
