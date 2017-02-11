@@ -42,3 +42,4 @@ if (("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 endif()
 
 add_subdirectory(src)
+add_subdirectory(test)
