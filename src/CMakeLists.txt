@@ -7,7 +7,9 @@ set(feedling_SRCS
     Feed.cpp
     FeedParser.cpp
     FeedsModel.cpp
+    FileTreeStorage.cpp
     Folder.cpp
+    IStorage.cpp
     Presenter.cpp
     TreeItem.cpp
     View.cpp

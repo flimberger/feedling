@@ -17,13 +17,15 @@ class QNetworkReply;
 
 namespace feedling {
 
+class IStorage;
 class View;
 
 class Application : public QObject, Presenter
 {
     Q_OBJECT
 public:
-    explicit Application(std::unique_ptr<View> &&view, QObject *parent=nullptr);
+    explicit Application(std::unique_ptr<View> &&view, std::unique_ptr<IStorage> &&storage,
+                         QObject *parent=nullptr);
     ~Application();
 
     Q_SLOT void init();
@@ -40,6 +42,7 @@ private:
     QTimer m_timer;
     QNetworkAccessManager *m_network;
     std::unique_ptr<View> m_view;
+    std::unique_ptr<IStorage> m_storage;
     FeedsModel m_feedsModel;
     EntriesModel m_entriesModel;
 };

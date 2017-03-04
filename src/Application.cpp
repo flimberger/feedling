@@ -15,15 +15,18 @@
 #include "EntriesModel.hpp"
 #include "Feed.hpp"
 #include "FeedParser.hpp"
+#include "IStorage.hpp"
 #include "View.hpp"
 
 namespace feedling {
 
-Application::Application(std::unique_ptr<View> &&view, QObject *parent)
+Application::Application(std::unique_ptr<View> &&view, std::unique_ptr<IStorage> &&storage,
+                         QObject *parent)
   : QObject{parent},
     Presenter{},
     m_network{new QNetworkAccessManager(this)},
-    m_view{std::move(view)}
+    m_view{std::move(view)},
+    m_storage{std::move(storage)}
 {
     init();
 }
@@ -32,6 +35,7 @@ Application::~Application() = default;
 
 void Application::init()
 {
+    m_storage->init();
     m_view->init(this);
     m_view->setFeedsModel(&m_feedsModel);
     m_view->setEntriesModel(&m_entriesModel);
