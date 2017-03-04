@@ -23,6 +23,7 @@ if (("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
     add_compile_options(
         -fno-rtti
         -fno-exceptions
+        -Werror
     )
     add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0x050500 -DQT_DEPRECATED_WARNINGS)
     if ("${CMAKE_CXX_COMPILER}" STREQUAL "Clang")
