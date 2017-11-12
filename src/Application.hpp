@@ -5,13 +5,13 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QTimer>
-#include <QtCore/QUrl>  // needed by moc
 
 #include <QtNetwork/QNetworkAccessManager>
 
 #include "EntriesModel.hpp"
 #include "FeedsModel.hpp"
 #include "Presenter.hpp"
+#include "TextFileDataStore.h"
 
 class QNetworkReply;
 
@@ -35,13 +35,12 @@ public:
 private:
     void parseFeed(QNetworkReply *reply);
 
-    void getFeedsFromConfig();
-
     QTimer m_timer;
     QNetworkAccessManager *m_network;
     std::unique_ptr<View> m_view;
-    FeedsModel m_feedsModel;
     EntriesModel m_entriesModel;
+    FeedsModel m_feedsModel;
+    TextFileDataStore m_dataStore;
 };
 
 }  // namespace feedling

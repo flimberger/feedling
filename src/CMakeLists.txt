@@ -8,6 +8,7 @@ set(feedling_SRCS
     FeedsModel.cpp
     Folder.cpp
     Presenter.cpp
+    TextFileDataStore.cpp
     TreeItem.cpp
     View.cpp
     ui/MainWindow.cpp
