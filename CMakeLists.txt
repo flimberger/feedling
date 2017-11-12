@@ -1,10 +1,10 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.9)
 
 project(feedling)
 
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/Modules")
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -20,14 +20,11 @@ find_package(Qt5 REQUIRED COMPONENTS
 if (("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
     OR
     ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU"))
-    add_compile_options(
-        -fno-rtti
-        -fno-exceptions
-    )
+    add_compile_options(-Werror)
     add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0x050500 -DQT_DEPRECATED_WARNINGS)
     if ("${CMAKE_CXX_COMPILER}" STREQUAL "Clang")
         add_compile_options(
-            -fcolor-diagnostics
+            -fcolor-diagnostics # Diagnostic the rainbow
             -Weverything
             -Wno-c++98-compat
             -Wno-padded
