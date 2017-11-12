@@ -6,14 +6,10 @@
 
 #include <QtCore/QtDebug>
 
-#include <QtNetwork/QNetworkRequest>
-#include <QtNetwork/QNetworkReply>
-
 #include <QtQml/QQmlContext>
 
 #include "EntriesModel.hpp"
 #include "Feed.hpp"
-#include "FeedParser.hpp"
 #include "View.hpp"
 
 namespace feedling {
@@ -21,12 +17,10 @@ namespace feedling {
 Application::Application(std::unique_ptr<View> &&view, QObject *parent)
   : QObject{parent},
     Presenter{},
-    m_network{new QNetworkAccessManager(this)},
     m_view{std::move(view)},
+    m_fetcher{&m_feedsModel},
     m_dataStore{".", &m_feedsModel}
 {
-    connect(m_network, &QNetworkAccessManager::finished,
-            this,      &Application::parseFeed);
     init();
 }
 
@@ -39,15 +33,13 @@ void Application::init()
     m_view->setEntriesModel(&m_entriesModel);
     // TODO: make this asynchronous
     m_dataStore.fetchFeeds();
+    // TODO: this should also be asynchronous
+    m_fetcher.onFetch();
 }
 
 void Application::onFetchFeeds()
 {
-    for (const auto &wref : m_feedsModel.feeds()) {
-        if (const auto feed = wref.lock()) {
-            parseFeed(m_network->get(QNetworkRequest(feed->url())));
-        }
-    }
+    m_fetcher.onFetch();
 }
 
 void Application::selectFeed(const QModelIndex &index)
@@ -65,24 +57,6 @@ void Application::selectEntry(const QModelIndex &index)
     if (entry) {
         m_view->showEntry(entry);
         qDebug() << entry->title() << " selected";
-    }
-}
-
-void Application::parseFeed(QNetworkReply *reply)
-{
-    const auto &url = reply->url();
-    auto feed = m_feedsModel.getFeed(url).lock();
-    if (feed) {
-        qDebug() << "Starting parser for " << url.toString();
-        auto *parser = new FeedParser{feed, reply};
-        QObject::connect(parser, &FeedParser::done,
-                         [parser, reply](bool success, const std::shared_ptr<Feed> &feed) {
-            qDebug() << feed->url().toString() << " is done " << success;
-            delete parser;  // TODO: maybe there should be a registry...
-            reply->deleteLater();
-        });
-    } else {
-        qWarning() << "unknown URL:" << url;
     }
 }
 

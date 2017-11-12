@@ -6,10 +6,9 @@
 #include <QtCore/QObject>
 #include <QtCore/QTimer>
 
-#include <QtNetwork/QNetworkAccessManager>
-
 #include "EntriesModel.hpp"
 #include "FeedsModel.hpp"
+#include "Fetcher.hpp"
 #include "Presenter.hpp"
 #include "TextFileDataStore.h"
 
@@ -33,13 +32,11 @@ public:
     void selectEntry(const QModelIndex &index) override;
 
 private:
-    void parseFeed(QNetworkReply *reply);
-
     QTimer m_timer;
-    QNetworkAccessManager *m_network;
     std::unique_ptr<View> m_view;
     EntriesModel m_entriesModel;
     FeedsModel m_feedsModel;
+    Fetcher m_fetcher;
     TextFileDataStore m_dataStore;
 };
 

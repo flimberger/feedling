@@ -6,6 +6,7 @@ set(feedling_SRCS
     Feed.cpp
     FeedParser.cpp
     FeedsModel.cpp
+    Fetcher.cpp
     Folder.cpp
     Presenter.cpp
     TextFileDataStore.cpp
