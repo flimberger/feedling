@@ -20,8 +20,7 @@ FeedParser::FeedParser(std::shared_ptr<Feed> feed, QIODevice *ioDevice, QObject 
   : QObject{parent},
     m_xmlReader{std::make_unique<QXmlStreamReader>()},
     m_feed{feed},
-    m_ioDevice{ioDevice},
-    m_parsing{false}
+    m_ioDevice{ioDevice}
 {
     QObject::connect(m_ioDevice, &QIODevice::readyRead, this, &FeedParser::onDataReady);
 }
@@ -38,6 +37,7 @@ void FeedParser::parseXml() {
     auto url = m_feed->url().toString();
     qDebug() << "Starting to parse " << url;
     while (!m_xmlReader->atEnd()) {
+        qDebug() << "parser loop";
         m_xmlReader->readNext();
         if (m_xmlReader->isStartElement()) {
             m_currentTag = m_xmlReader->name().toString();
@@ -81,11 +81,12 @@ void FeedParser::parseXml() {
 }
 
 void FeedParser::onDataReady() {
-    m_xmlReader->addData(m_ioDevice->readAll());
-    if (!m_parsing) {
-        parseXml();
-        m_parsing = true;
-    }
+    auto data = m_ioDevice->readAll();
+    qDebug() << "BEDIN DATA";
+    qDebug() << data;
+    qDebug() << "END DATA";
+    m_xmlReader->addData(data);
+    parseXml();
 }
 
 }  // namespace feedling

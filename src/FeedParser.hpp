@@ -34,7 +34,6 @@ private:
     std::shared_ptr<Feed> m_feed;
     QIODevice *m_ioDevice;
     QString m_currentTag;
-    bool m_parsing;
 };
 
 }  // namespace feedling
