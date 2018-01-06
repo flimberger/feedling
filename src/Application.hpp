@@ -10,7 +10,7 @@
 #include "FeedsModel.hpp"
 #include "Fetcher.hpp"
 #include "Presenter.hpp"
-#include "TextFileDataStore.h"
+#include "TextFileDataStore.hpp"
 
 class QNetworkReply;
 
