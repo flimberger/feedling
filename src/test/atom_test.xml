@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2006/Atom">
+  <title>Test Feed</title>
+  <link href="http://example.org/atom" />
+  <updated>2018-01-11T23:42:00Z</updated>
+  <author>
+    <name>Florian Limberger</name>
+  </author>
+  <id>urn:uuid:ede9df10-f42f-4171-b447-d7f4fc4563ba</id>
+  <entry>
+    <title>Hello Atom</title>
+    <link href="http://example.org/blog/hello_world" />
+    <id>urn:uuid:744f37e3-a74d-4aad-bd84-2838558393a6</id>
+    <updated>2018-01-11T23:42:00Z</updated>
+    <summary>Hello world!</summary>
+  </entry>
+  <entry>
+    <title>First Post</title>
+    <link href="http://example.org/blog/first_post" />
+    <id>urn:uuid:3c763a00-6448-47a3-9446-2c719c32693b</id>
+    <updated>2018-01-11T21:42:00Z</updated>
+    <summary>First post</summary>
+  </entry>
+</feed>

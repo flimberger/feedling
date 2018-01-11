@@ -5,6 +5,9 @@ project(feedling)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/Modules")
 
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -38,4 +41,8 @@ if (("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
     endif()
 endif()
 
+enable_testing()
+
+add_subdirectory(test_base)
+add_subdirectory(third_party)
 add_subdirectory(src)

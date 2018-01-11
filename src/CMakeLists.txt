@@ -20,3 +20,5 @@ target_link_libraries(feedling
     Qt5::Network
     Qt5::Widgets
 )
+
+add_subdirectory(test)
