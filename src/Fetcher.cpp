@@ -35,14 +35,11 @@ void Fetcher::onFeedDownloadFinished(QNetworkReply *reply)
     // also like unneccessary overhead to me. Maybe it belongs into the Feed class.
     auto feed = m_feedsModel->getFeed(url).lock();
     if (feed) {
-        qDebug() << "Starting parser for " << url.toString();
-        auto *parser = new FeedParser{feed, reply};
-        QObject::connect(parser, &FeedParser::done,
-                         [parser, reply](bool success, const std::shared_ptr<Feed> &feed) {
-            qDebug() << feed->url().toString() << " is done " << success;
-            delete parser;  // TODO: maybe there should be a registry...
-            reply->deleteLater();
-        });
+        // TODO: this should be performed in a separate background thread
+        auto data = reply->readAll();
+        if (!FeedParser::parseXml(feed, data.data())) {
+            qWarning() << "failed to parse" << url;
+        }
     } else {
         qWarning() << "unknown URL:" << url;
     }

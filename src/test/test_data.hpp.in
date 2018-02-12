@@ -1,0 +1,10 @@
+#ifndef FEEDLING_TEST_DATA_HPP
+#define FEEDLING_TEST_DATA_HPP
+
+namespace feedling {
+
+constexpr const char *ATOM_TEST_PATH = "@TEST_SOURCE_DIR@/atom_test.xml";
+
+}  // namespace feedling
+
+#endif  // FEEDLING_TEST_DATA_HPP

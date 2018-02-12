@@ -1,3 +1,6 @@
+set(TEST_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+configure_file(test_data.hpp.in test_data.hpp)
+
 add_executable(test_parser
     test_parser.cpp
     ../Entry.cpp
