@@ -36,8 +36,8 @@ void Fetcher::onFeedDownloadFinished(QNetworkReply *reply)
     auto feed = m_feedsModel->getFeed(url).lock();
     if (feed) {
         // TODO: this should be performed in a separate background thread
-        auto data = reply->readAll();
-        if (!FeedParser::parseXml(feed, data.data())) {
+        FeedParser parser{feed};
+        if (!parser.read(reply)) {
             qWarning() << "failed to parse" << url;
         }
     } else {

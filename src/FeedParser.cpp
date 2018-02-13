@@ -1,72 +1,73 @@
 #include "FeedParser.hpp"
 
 #include <QtCore/QtDebug>
-#include <QtCore/QDateTime>
-#include <QtCore/QXmlStreamReader>
 
 #include "Entry.hpp"
 #include "Feed.hpp"
 
 namespace feedling {
 
-static constexpr const char *TAGNAME_CONTENT = "encoded";  // content:encoded
-static constexpr const char *TAGNAME_DESCR = "description";
-static constexpr const char *TAGNAME_ITEM = "item";
-static constexpr const char *TAGNAME_LINK = "link";
-static constexpr const char *TAGNAME_PUBDATE = "pubDate";
-static constexpr const char *TAGNAME_TITLE = "title";
+FeedParser::FeedParser(const std::shared_ptr<Feed> &feed) : m_feed{feed} {}
 
-bool FeedParser::parseXml(const std::shared_ptr<Feed> &feed, std::string_view data) {
-    QXmlStreamReader xmlReader;
-    QString content;
-    QString currentTag;
-    QString descr;
-    QString link;
-    QDateTime pubDate;
-    QString title;
+FeedParser::~FeedParser() = default;
 
-    xmlReader.addData(QByteArray{data.data()});
-    auto url = feed->url().toString();
-    qDebug() << "Starting to parse " << url;
-    while (!xmlReader.atEnd()) {
-        qDebug() << "parser loop";
-        xmlReader.readNext();
-        if (xmlReader.isStartElement()) {
-            currentTag = xmlReader.name().toString();
-        } else if (xmlReader.isEndElement()) {
-            if (xmlReader.name() == TAGNAME_ITEM) {
-                // create entry
-                feed->addEntry(std::make_shared<Entry>(title, content, pubDate, feed));
-                // Clear strings
-                content.clear();
-                descr.clear();
-                link.clear();
-                // pubDate.clear();
-                title.clear();
-            }
-        } else if ((xmlReader.isCharacters() || xmlReader.isCDATA())
-                   && !xmlReader.isWhitespace()) {
-            if (currentTag == TAGNAME_CONTENT) {
-                content = xmlReader.text().toString();
-            } else if (currentTag == TAGNAME_DESCR) {
-                descr = TAGNAME_DESCR;
-            } else if (currentTag == TAGNAME_LINK) {
-                link = xmlReader.text().toString();
-            } else if (currentTag == TAGNAME_PUBDATE) {
-                pubDate = QDateTime::fromString(xmlReader.text().toString());
-            } else if (currentTag == TAGNAME_TITLE) {
-                title = xmlReader.text().toString();
-            }
+bool FeedParser::read(QIODevice *ioDevice) {
+    m_xmlReader.setDevice(ioDevice);
+
+    if (m_xmlReader.readNextStartElement()) {
+        if (m_xmlReader.name() == "feed") {
+            readFeed();
+        } else if (m_xmlReader.name() == "entry") {
+            readEntry();
+        } else {
+            m_xmlReader.raiseError("This is not an Atom file");
         }
     }
-    if (xmlReader.hasError()) {
-        qDebug() << "Parsing of " << url << " failed";
 
-        return false;
-    } else {
-        qDebug() << "Parsing of " << url << " finished";
+    return !m_xmlReader.error();
+}
 
-        return true;
+QString FeedParser::errorString() const {
+    return QObject::tr("%1\nLine %2, column %3")
+            .arg(m_xmlReader.errorString())
+            .arg(m_xmlReader.lineNumber())
+            .arg(m_xmlReader.columnNumber());
+}
+
+void FeedParser::readEntry() {
+    Q_ASSERT(m_xmlReader.isStartElement() && m_xmlReader.name() == "entry");
+
+    QString title;
+    QString content;
+    QDateTime date;
+
+    while (m_xmlReader.readNextStartElement()) {
+        qDebug() << "parsing element" << m_xmlReader.name();
+        if (m_xmlReader.name() == "title") {
+            title = m_xmlReader.readElementText();
+        } else if (m_xmlReader.name() == "content") {
+            content = m_xmlReader.readElementText();
+        } else if (m_xmlReader.name() == "published") {
+            date = QDateTime::fromString(m_xmlReader.readElementText());
+        } else {
+            m_xmlReader.skipCurrentElement();
+        }
+    }
+
+    qDebug() << "parsed entry" << title;
+    m_feed->addEntry(std::make_shared<Entry>(title, content, date, m_feed));
+}
+
+void FeedParser::readFeed() {
+    Q_ASSERT(m_xmlReader.isStartElement() && m_xmlReader.name() == "feed");
+
+    while (m_xmlReader.readNextStartElement()) {
+        // for now only entries are consumed
+        if (m_xmlReader.name() == "entry") {
+            readEntry();
+        } else {
+            m_xmlReader.skipCurrentElement();
+        }
     }
 }
 

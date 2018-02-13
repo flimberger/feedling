@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2006/Atom">
+<feed xmlns="http://www.w3.org/2005/Atom">
   <title>Test Feed</title>
   <link href="http://example.org/atom" />
   <updated>2018-01-11T23:42:00Z</updated>

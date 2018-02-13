@@ -1,6 +1,6 @@
-#include <fstream>
-
 #include <catch.hpp>
+
+#include <QtCore/QFile>
 
 #include "../Feed.hpp"
 #include "../FeedParser.hpp"
@@ -13,13 +13,19 @@ TEST_CASE("Test the atom parser", "[Parser]")
 {
     auto feed = std::make_shared<Feed>("test", "test feed", QUrl{"http://example.org/atom"});
 
-    auto f = std::fstream{ATOM_TEST_PATH, std::fstream::in};
-    if (!f.is_open()) {
-        FAIL("failed to open test data \"" << ATOM_TEST_PATH << '\"');
-    }
-    auto data = std::string(std::istreambuf_iterator<char>(f), std::istreambuf_iterator<char>());
-    bool ret = FeedParser::parseXml(feed, data);
+    QFile f{ATOM_TEST_PATH};
 
-    REQUIRE(ret);
+    if (!f.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        FAIL("Failed to open file \"" << ATOM_TEST_PATH << '\"');
+    }
+
+    FeedParser p{feed};
+
+    bool ret = p.read(&f);
+
+    if (!ret) {
+        FAIL(p.errorString().toStdString());
+    }
+
     REQUIRE(feed->size() == 2);
 }

@@ -2,18 +2,33 @@
 #define FEEDLING_FEEDPARSER_HPP
 
 #include <memory>
-#include <string_view>
+
+#include <QtCore/QXmlStreamReader>
+
+class QIODevice;
 
 namespace feedling {
 
 class Feed;
 
+// Simple parser which currently only understands Atom
 class FeedParser
 {
 public:
-    // feed: feed to which the parsed data is added
-    // data: raw XML data of the feed
-    static bool parseXml(const std::shared_ptr<Feed> &feed, std::string_view data);
+    FeedParser(const std::shared_ptr<Feed> &m_feed);
+    ~FeedParser();
+
+    bool read(QIODevice *ioDevice);
+
+    QString errorString() const;
+
+private:
+    void readEntry();
+    void readFeed();
+
+    QXmlStreamReader m_xmlReader;
+
+    std::shared_ptr<Feed> m_feed;
 };
 
 }  // namespace feedling
