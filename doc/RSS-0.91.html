@@ -1,0 +1,214 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0033)http://www.rssboard.org/rss-0-9-1 -->
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>RSS 0.91 Specification (UserLand)</title>
+<style type="text/css" media="screen">
+@import url("http://www.rssboard.org/images/stylesheet.css");
+</style>
+<style type="text/css" media="screen">
+@import url("http://www.rssboard.org/images/spec-stylesheet.css");
+</style>
+<link rel="alternate" type="application/rss+xml" title="RSS Advisory Board" href="http://feeds.rssboard.org/rssboard">
+<meta name="robots" content="noodp">
+<style></style></head>
+<body>
+<script type="text/javascript">
+window.google_analytics_uacct = "UA-631537-4";
+</script>
+<!-- ukey="13C1F4FD" -->
+<!-- Begin Page -->
+<div class="page">
+<table border="0" cellpadding="0" cellspacing="0">
+<tbody><tr valign="top">
+<td>
+<p class="titlebar"><a href="http://www.rssboard.org/"><img src="./RSS-0.91_files/rss-advisory-board.gif" width="726" height="103" border="0" alt="RSS Advisory Board"></a></p>
+<div class="main">
+<!-- Begin Google AdSense -->
+<p align="center"><script type="text/javascript"><!--
+google_ad_client = "pub-8378161688790357";
+/* RSS Board, 728x90, created 10/30/10 */
+google_ad_slot = "8997688149";
+google_ad_width = 728;
+google_ad_height = 90;
+//-->
+</script>
+<script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script></p>
+<!-- End Google AdSense -->
+<!-- Begin Main Content -->
+<div class="specification">
+<h3>RSS 0.91 Specification</h3>
+
+<p class="fineprint">Archivist's Note: This is the RSS 0.91 specification published by UserLand Software on June 9, 2000. The current version of the RSS 2.0 specification is available at <a href="http://www.rssboard.org/rss-specification">this link</a> and <a href="http://www.rssboard.org/rss-history">other revisions</a> have been archived.   
+
+</p><h4>Changes<a name="changes"></a> <a href="http://www.rssboard.org/rss-0-9-1#changes" title="Changes"><img src="./RSS-0.91_files/left-arrow.gif" height="9" width="11" border="0"></a></h4>
+<p>6/9/00: Changed <a href="http://www.rssboard.org/rss-0-9-1#copyright">copyright</a> to the IETF-inspired copyright we used for <a href="http://www.xmlrpc.com/spec#update2">XML-RPC</a>.
+</p><p>6/9/00: Minor changes and clarifications in response to feedback. 
+</p><h4>Intro<a name="intro"></a> <a href="http://www.rssboard.org/rss-0-9-1#intro" title="Intro"><img src="./RSS-0.91_files/left-arrow.gif" height="9" width="11" border="0"></a></h4>
+<p>For a political introduction to this specification, see <a href="http://scriptingnews.userland.com/backissues/2000/06/07#rss">Scripting News</a> for 6/7/00.
+</p><p>Post comments on the discussion group <a href="http://backend.userland.com/discuss/msgReader$14">here</a>, or on the Syndication mail list <a href="http://www.egroups.com/group/syndication">hosted</a> on eGroups.
+</p><h4>Timeline<a name="timeline"></a> <a href="http://www.rssboard.org/rss-0-9-1#timeline" title="Timeline"><img src="./RSS-0.91_files/left-arrow.gif" height="9" width="11" border="0"></a></h4>
+<p>A brief history of RSS with pointers. 
+</p><p>In December 1997, UserLand <a href="http://davenet.userland.com/1997/12/15/scriptingNewsInXML">began</a> offering Scripting News syndicated in XML, as a public Web resource. Other sites adopted the format, known as &lt;scriptingNews&gt; format.
+</p><p>In March 1999, Netscape opened <a href="http://my.netscape.com/">My.Netscape.Com</a>, based on an XML syndication format known as RSS 0.9. 
+</p><p>In April 1999, <a href="http://my.userland.com/">My.UserLand.Com</a> opened, an aggregator that processed RSS 0.9 content.
+</p><p>In May 1999, My.UserLand.Com supported &lt;scriptingNews&gt; 2.0b1 <a href="http://my.userland.com/stories/storyReader$11">format</a>.
+</p><p>In July 1999, Netscape introduced <a href="http://my.netscape.com/publish/help/mnn20/quickstart.html">RSS 0.91</a>, incorporating most of the features of &lt;scriptingNews&gt; 2.0b1. At the same time My.UserLand.Com supported RSS 0.91.
+</p><p>In December 1999, UserLand shipped the Manila content management system with built-in <a href="http://weblogs.userland.com/manilaNewbies/usersguide/syndicationprefs/howsyndicationworks">support</a> for &lt;scriptingNews&gt; 2.0b1.
+</p><p>In March 2000, O'Reilly's aggregation engine, <a href="http://www.oreillynet.com/meerkat/">Meerkat</a>, opened, reading all the above formats.
+</p><p>In April 2000, UserLand <a href="http://weblogs.userland.com/manilaNewbies/discuss/msgReader$2691">added</a> built-in RSS 0.91 support to all Manila-authored sites.
+</p><h4>About this document<a name="aboutThisDocument"></a> <a href="http://www.rssboard.org/rss-0-9-1#aboutThisDocument" title="About this document"><img src="./RSS-0.91_files/left-arrow.gif" height="9" width="11" border="0"></a></h4>
+<p>In June 2000, after a year of active deployment, we've learned a lot about RSS, there are lots of ideas in the community for its evolution, and the ideas are maturing. Editorial tools have improved a lot in the last year, further innovations are possible in the near future. 
+</p><p>But we lack a firm foundation to build on, the only specification we have for RSS is on the Netscape website, and it's not being maintained, as far as we know. 
+</p><p>Therefore, this document is explains RSS as it's currently practiced. 
+</p><h4>Questions about the future<a name="questionsAboutTheFuture"></a> <a href="http://www.rssboard.org/rss-0-9-1#questionsAboutTheFuture" title="Questions about the future"><img src="./RSS-0.91_files/left-arrow.gif" height="9" width="11" border="0"></a></h4>
+<p>Will RSS remain as-is, to be superceded by new formats? Or will RSS evolve, and if so, how will that happen? We now have at least three 24-by-7 aggregation engines, and a thousand RSS sources. Because RSS is a simple format, and because the community is relatively tight-knit, it seems possible that we could make improvements without disrupting the flow.
+</p><h4>Sample file<a name="sampleFile"></a> <a href="http://www.rssboard.org/rss-0-9-1#sampleFile" title="Sample file"><img src="./RSS-0.91_files/left-arrow.gif" height="9" width="11" border="0"></a></h4>
+<p>For an example please refer to this <a href="http://static.userland.com/gems/backend/sampleRss.xml">sample RSS 0.91 file</a>, containing selected links from <a href="http://writetheweb.com/">WriteTheWeb.Com</a>, on its opening day 6/5/00. 
+</p><p>It may be helpful to refer to the My.UserLand <a href="http://my.userland.com/viewChannel$2010">rendering</a> of its RSS file to see how the XML can be turned into something browsable.
+</p><h4>What is RSS?<a name="whatIsRss"></a> <a href="http://www.rssboard.org/rss-0-9-1#whatIsRss" title="What is RSS?"><img src="./RSS-0.91_files/left-arrow.gif" height="9" width="11" border="0"></a></h4>
+<p>There is no consensus on what RSS stands for, so it's not an acronym, it's a name. Later versions of this spec may say it's an acronym, and hopefully this won't break too many applications.
+</p><p>RSS is dialect of XML. All RSS files must conform to the XML 1.0 <a href="http://www.w3.org/TR/REC-xml">specification</a>, as published on the World Wide Web Consortium (W3C) website.
+</p><p>At the top level, a RSS document is a &lt;rss&gt; element, with a mandatory attribute called version, that specifies the version of RSS that the document conforms to.
+</p><p>Subordinate to the &lt;rss&gt; element is a single &lt;channel&gt; element, which contains information about the channel (metadata) and its contents. 
+</p><h4>Required &lt;channel&gt; sub-elements<a name="requiredLtchannelgtSubelements"></a> <a href="http://www.rssboard.org/rss-0-9-1#requiredLtchannelgtSubelements" title="Required &lt;channel&gt; sub-elements"><img src="./RSS-0.91_files/left-arrow.gif" height="9" width="11" border="0"></a></h4>
+<p>Following are the required elements of a &lt;channel&gt;.
+</p><p>&lt;title&gt; -- The name of the channel. It's how people refer to your service. If you have an HTML website that contains the same information as your RSS file, the title of your channel should be the same as the title of your website. Maximum length is 100 characters.
+</p><p>&lt;link&gt; -- A URL pointing to the website named in the &lt;title&gt;. Maximum length is 500 characters.
+</p><p>&lt;description&gt; -- A phrase that describes your channel, your channel's positioning statement. Maximum length is 500 characters.
+</p><p>&lt;language&gt; -- Indicates the language your channel is written in. This allows aggregators to group all Italian language sites, for example, on a single page. A list of allowable values for this element is <a href="http://backend.userland.com/stories/storyReader$16">here</a>.
+</p><p>&lt;image&gt; -- An XML element that contains several sub-elements, explained <a href="http://www.rssboard.org/rss-0-9-1#image">here</a>.
+</p><h4>Optional &lt;channel&gt; sub-elements<a name="optionalLtchannelgtSubelements"></a> <a href="http://www.rssboard.org/rss-0-9-1#optionalLtchannelgtSubelements" title="Optional &lt;channel&gt; sub-elements"><img src="./RSS-0.91_files/left-arrow.gif" height="9" width="11" border="0"></a></h4>
+<p>&lt;copyright&gt; -- Copyright notice for content in the channel. Maximum length is 100.
+</p><p>&lt;managingEditor&gt; -- The email address of the managing editor of the channel, the person to contact for editorial inquiries. Maximum length is 100. <i>The suggested format for email addresses in RSS elements is bull@mancuso.com (Bull Mancuso).</i> 
+</p><p>&lt;webMaster&gt; -- The email address of the webmaster for the channel, the person to contact if there are technical problems. Maximum length is 100.
+</p><p>&lt;rating&gt; -- The <a href="http://www.w3.org/PICS/#Specs">PICS</a> rating for the channel.  Maximum length is 500.
+</p><p>&lt;pubDate&gt; -- The publication date for the content in the channel. For example, the New York Times publishes on a daily basis, the publication date flips once every 24 hours. That's when the pubDate of the channel changes. <i>All date-times in RSS conform to the Date and Time Specification of <a href="http://andrew2.andrew.cmu.edu/rfc/rfc822.html">RFC 822</a>.</i>
+</p><p>&lt;lastBuildDate&gt; -- The date-time the last time the content of the channel changed.
+</p><p>&lt;docs&gt; -- A URL, points to the documentation for the format used in the RSS file. It's probably a pointer to this page. It's for people who might stumble across an RSS file on a Web server 25 years from now and wonder what it is.  Maximum length is 500.
+</p><p>&lt;textInput&gt; -- An XML element that contains several sub-elements, explained <a href="http://www.rssboard.org/rss-0-9-1#textInput">here</a>.
+</p><p>&lt;skipDays&gt; -- An XML element that contains up to seven &lt;day&gt; sub-elements whose value is Monday, Tuesday, Wednesday, Thursday, Friday, Saturday or Sunday. Aggregators may not read the channel during hours listed in the skipDays element. (Most aggregators seem to ignore this element.)
+</p><p>&lt;skipHours&gt; -- An XML element that contains up to 24 &lt;hour&gt; sub-elements whose value is a number between 1 and 24, representing a time in GMT, when aggregators, if they support the feature, may not read the channel on days listed in the skipHours element. (Most aggregators seem to ignore this element.)
+</p><h4>What is an &lt;image&gt;?<a name="whatIsAnLtimagegt"></a> <a href="http://www.rssboard.org/rss-0-9-1#whatIsAnLtimagegt" title="What is an &lt;image&gt;?"><img src="./RSS-0.91_files/left-arrow.gif" height="9" width="11" border="0"></a></h4>
+<p><a name="image"></a>An &lt;image&gt; is a sub-element of &lt;channel&gt;, which contains three required and three optional sub-elements.
+</p><p>&lt;url&gt; is the URL of a GIF, JPEG or PNG image that represents the channel. Maximum length is 500.
+</p><p>&lt;title&gt; describes the image, it's used in the ALT attribute of the HTML &lt;img&gt; tag when the channel is rendered in HTML. Maximum length is 100.
+</p><p>&lt;link&gt; is the URL of the site, when the channel is rendered, the image is a link to the site. (Note, in practice the image &lt;title&gt; and &lt;link&gt; should have the same value as the channel's &lt;title&gt; and &lt;link&gt;. Maximum length is 500.
+</p><p>Optional elements include &lt;width&gt; and &lt;height&gt;, numbers, indicating the width and height of the image in pixels. &lt;description&gt; contains text that is included in the TITLE attribute of the link formed around the image in the HTML rendering.
+</p><p>Maximum value for width is 144, default value is 88. 
+</p><p>Maximum value for height is 400, default value is 31.
+</p><h4>What is an &lt;item&gt;?<a name="whatIsAnLtitemgt"></a> <a href="http://www.rssboard.org/rss-0-9-1#whatIsAnLtitemgt" title="What is an &lt;item&gt;?"><img src="./RSS-0.91_files/left-arrow.gif" height="9" width="11" border="0"></a></h4>
+<p>A channel may contain any number of &lt;item&gt;s, each of which links to a story, with an optional description.
+</p><p>&lt;title&gt; is the title of the story. Maximum length is 100.
+</p><p>&lt;link&gt; is the URL of the story. Maximum length is 500.
+</p><p>&lt;description&gt; is the story synopsis. Maximum length is 500.
+</p><h4>What is a &lt;textInput&gt;?<a name="whatIsALttextinputgt"></a> <a href="http://www.rssboard.org/rss-0-9-1#whatIsALttextinputgt" title="What is a &lt;textInput&gt;?"><img src="./RSS-0.91_files/left-arrow.gif" height="9" width="11" border="0"></a></h4>
+<p><a name="textInput"></a>A channel may optionally contain a &lt;textInput&gt; sub-element, which contains four required sub-elements.
+</p><p>&lt;title&gt; -- The label of the Submit button in the text input area. Maximum length is 100.
+</p><p>&lt;description&gt; -- Explains the text input area. Maximum length is 500.
+</p><p>&lt;name&gt; -- The name of the text object in the text input area. Maximum length is 20.
+</p><p>&lt;link&gt; -- The URL of the CGI script that processes text input requests. Maximum length is 500.
+</p><h4>Comments<a name="comments"></a> <a href="http://www.rssboard.org/rss-0-9-1#comments" title="Comments"><img src="./RSS-0.91_files/left-arrow.gif" height="9" width="11" border="0"></a></h4>
+<p>RSS 0.91 places restrictions on the first non-whitespace characters of the data in &lt;link&gt; and &lt;url&gt; elements. The data in these elements must begin with http:// or ftp://. Among others, https:, file:, mailto:, news:, and javascript: are not permitted.
+</p><h4>Copyright and disclaimer<a name="copyrightAndDisclaimer"></a> <a href="http://www.rssboard.org/rss-0-9-1#copyrightAndDisclaimer" title="Copyright and disclaimer"><img src="./RSS-0.91_files/left-arrow.gif" height="9" width="11" border="0"></a></h4>
+<p><a name="copyright"></a>© Copyright 1997-2000 UserLand Software. All Rights Reserved.
+</p><p>This document and translations of it may be copied and furnished to others, and derivative works that comment on or otherwise explain it or assist in its implementation may be prepared, copied, published and distributed, in whole or in part, without restriction of any kind, provided that the above copyright notice and these paragraphs are included on all such copies and derivative works.  
+</p><p>This document may not be modified in any way, such as by removing the copyright notice or references to UserLand or other organizations. Further, while these copyright restrictions apply to the written RSS specification, no claim of ownership is made by UserLand to the format it describes. Any party may, for commercial or non-commercial purposes, implement this protocol without royalty or license fee to UserLand. The limited permissions granted herein are perpetual and will not be revoked by UserLand or its successors or assigns.
+</p><p>This document and the information contained herein is provided on an "AS IS" basis and USERLAND DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE INFORMATION HEREIN WILL NOT INFRINGE ANY RIGHTS OR ANY IMPLIED WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. 
+</p></div><!-- End Main Content -->
+</div></td>
+<td class="sidebar">
+<!-- Begin Sidebar -->
+
+<div class="sidebargroup">
+<div class="sidebartitle">Main Menu</div>
+<div class="sidebarlink"><a href="http://www.rssboard.org/">RSS Advisory Board</a></div>
+<div class="sidebarlink"><a href="http://www.rssboard.org/rss-specification">RSS Specification</a></div>
+<div class="sidebarlink"><a href="http://www.rssboard.org/rss-profile">RSS Profile</a></div>
+<div class="sidebarlink"><a href="http://www.rssboard.org/rss-validator">RSS Validator</a></div>
+<div class="sidebarlink"><a href="http://www.rssboard.org/rss-autodiscovery">RSS Autodiscovery</a></div>
+<div class="sidebarlink"><a href="http://www.rssboard.org/advisory-board">Board Members</a></div>
+<div class="sidebarlink"><a href="http://www.rssboard.org/charter" rel="nofollow">Charter</a></div>
+<div class="sidebarlink"><a href="http://groups.yahoo.com/group/rss-board" rel="nofollow">RSS-Board Mailing List</a></div>
+<div class="sidebarlink"><a href="http://groups.yahoo.com/group/rss-public" rel="nofollow">RSS-Public Mailing List</a></div>
+<div class="sidebarlink"><a href="http://groups.yahoo.com/group/rss-media" rel="nofollow">RSS-Media Mailing List</a></div>
+<div class="sidebarlink"><a href="http://www.rssboard.org/rss-language-codes">RSS Language Codes</a></div>
+<div class="sidebarlink"><a href="http://www.rssboard.org/rsscloud-interface">RSSCloud Interface</a></div>
+<div class="sidebarlink"><a href="http://www.rssboard.org/rss-history">RSS History</a></div>
+</div>
+
+<div class="sidebargroup">
+<div class="sidebartitle">RSS Feeds</div>
+
+<div class="sidebarrsslink"><a href="http://feeds.rssboard.org/rssboard" rel="\&quot;nofollow\&quot;"><img src="./RSS-0.91_files/rss-icon.png" alt="Subscribe to Really Simple Syndication" border="0" width="16" height="16"></a> <a href="http://feeds.rssboard.org/rssboard" rel="\&quot;nofollow\&quot;">This Weblog</a></div>
+
+<p align="center"><a href="http://feeds.rssboard.org/rssboard" rel="\&quot;nofollow\&quot;"><img src="./RSS-0.91_files/rssboard" height="26" width="88" style="border:0" alt=""></a></p>
+
+</div>
+
+<div class="sidebargroup">
+<div class="sidebartitle">Spec Library</div>
+<div class="sidebarlink"><a href="http://www.rssboard.org/rss-specification">Current</a></div><div class="sidebarlink"><a href="http://www.rssboard.org/rss-2-0-1">2.0.1</a></div><div class="sidebarlink"><a href="http://www.rssboard.org/rss-2-0">2.0</a></div><div class="sidebarlink"><a href="http://www.rssboard.org/rss-0-9-2">0.92</a></div><div class="sidebarlink"><a href="http://www.rssboard.org/rss-0-9-1">0.91</a> (UserLand)</div><div class="sidebarlink"><a href="http://www.rssboard.org/rss-0-9-1-netscape">0.91</a> (Netscape)</div><div class="sidebarlink"><a href="http://www.rssboard.org/rss-0-9-0">0.90</a></div>
+<div class="sidebarlink"><a href="http://www.rssboard.org/rss-change-notes">RSS Change Notes</a></div>
+</div>
+
+<div class="sidebargroup">
+<div class="sidebartitle">Namespaces</div>
+<div class="sidebarlink"><a href="http://www.rssboard.org/creative-commons">Creative Commons</a></div>
+<div class="sidebarlink"><a href="http://www.rssboard.org/trackback">Trackback</a></div>
+</div>
+
+<div class="sidebargroup">
+<div class="sidebartitle">Archive</div>
+<div class="sidebarlink"><a href="http://www.rssboard.org/site-index" rel="nofollow">Site Index</a></div>
+<div class="sidebarlink"><a href="http://www.rssboard.org/skip-hours-days">SkipHours and SkipDays</a></div>
+<div class="sidebarlink"><a href="http://www.rssboard.org/rss-encoding-examples">RSS Encoding Examples</a></div>
+<div class="sidebarlink"><a href="http://www.rssboard.org/rss-articles">Articles</a></div>
+</div>
+
+<div class="sidebargroup">
+<div class="sidebartitle">Board Members</div>
+<div class="sidebarlink"><a href="http://workbench.cadenhead.org/">Rogers Cadenhead</a></div>
+<div class="sidebarlink"><a href="http://www.chipsquips.com/">Sterling "Chip" Camden</a></div>
+<div class="sidebarlink"><a href="http://www.simonecarletti.com/">Simone Carletti</a></div>
+<div class="sidebarlink"><a href="http://www.xn--8ws00zhy3a.com/">James Holderness</a></div>
+<div class="sidebarlink"><a href="http://www.theshiftedlibrarian.com/">Jenny Levine</a></div>
+<div class="sidebarlink"><a href="http://www.burningdoor.com/eric/">Eric Lunt</a></div>
+<div class="sidebarlink"><a href="http://www.kbcafe.com/rss/">Randy Charles Morin</a></div>
+<div class="sidebarlink"><a href="http://ryanparman.com/">Ryan Parman</a></div>
+<div class="sidebarlink"><a href="http://www.jakesavin.com/">Jake Savin</a></div>
+<div class="sidebarlink"><a href="http://www.shellen.com/">Jason Shellen</a></div>
+<div class="sidebarlink"><a href="http://journal.paul.querna.org/">Paul Querna</a></div>
+</div>
+<div class="sidebargroup">
+<div class="sidebartitle">Other Formats</div>
+<div class="sidebarlink"><a href="http://www.atomenabled.org/" rel="nofollow">Atom</a></div>
+<div class="sidebarlink"><a href="http://web.resource.org/rss/1.0/" rel="nofollow">RDF Site Summary</a></div>
+</div>
+<div class="sidebargroup">
+<div class="sidebartitle">Links</div>
+<div class="sidebarlink"><a href="http://www.icerocket.com/search?tab=blog&amp;q=link%3Awww.rssboard.org">Find on IceRocket</a></div>
+</div>
+
+<!-- End Sidebar -->
+</td>
+</tr>
+</tbody></table>
+<!-- End Page -->
+<div class="footer">
+<p><a href="http://www.rssboard.org/">RSS Advisory Board</a> |
+<a href="http://feeds.rssboard.org/rssboard">RSS Feed</a> |
+<a href="http://www.rssboard.org/rss-specification">RSS Spec</a> |
+Hosted by <a href="http://www.worldreadable.com/">World Readable</a></p>
+</div>
+<!-- Google Analytics Tracking -->
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-631537-4";
+urchinTracker();
+</script>
+<!-- End Google Analytics Tracking -->
+</div>
+
+	</body></html>

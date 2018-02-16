@@ -1,0 +1,195 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0033)http://www.rssboard.org/rss-0-9-2 -->
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>RSS 0.92 Specification</title>
+<style type="text/css" media="screen">
+@import url("http://www.rssboard.org/images/stylesheet.css");
+</style>
+<style type="text/css" media="screen">
+@import url("http://www.rssboard.org/images/spec-stylesheet.css");
+</style>
+<link rel="alternate" type="application/rss+xml" title="RSS Advisory Board" href="http://feeds.rssboard.org/rssboard">
+<meta name="robots" content="noodp">
+<style></style></head>
+<body>
+<script type="text/javascript">
+window.google_analytics_uacct = "UA-631537-4";
+</script>
+<!-- ukey="13C1F4FD" -->
+<!-- Begin Page -->
+<div class="page">
+<table border="0" cellpadding="0" cellspacing="0">
+<tbody><tr valign="top">
+<td>
+<p class="titlebar"><a href="http://www.rssboard.org/"><img src="./RSS-0.92_files/rss-advisory-board.gif" width="726" height="103" border="0" alt="RSS Advisory Board"></a></p>
+<div class="main">
+<!-- Begin Google AdSense -->
+<p align="center"><script type="text/javascript"><!--
+google_ad_client = "pub-8378161688790357";
+/* RSS Board, 728x90, created 10/30/10 */
+google_ad_slot = "8997688149";
+google_ad_width = 728;
+google_ad_height = 90;
+//-->
+</script>
+<script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script></p>
+<!-- End Google AdSense -->
+<!-- Begin Main Content -->
+<div class="specification">
+<h3>RSS 0.92 Specification</h3>
+
+<p class="fineprint">Archivist's Note: This is the RSS 0.92 specification published by UserLand Software on December 25, 2000. The current version of the RSS 2.0 specification is available at <a href="http://www.rssboard.org/rss-specification">this link</a> and <a href="http://www.rssboard.org/rss-history">other revisions</a> have been archived.  
+
+</p><h4>Philosophy<a name="philosophy"></a> <a href="http://www.rssboard.org/rss-0-9-2#philosophy" title="Philosophy"><img src="./RSS-0.92_files/left-arrow.gif" height="9" width="11" border="0"></a></h4>
+<p>RSS is a Web content syndication format.
+
+</p><h4>How 0.92 relates to 0.91<a name="how092RelatesTo091"></a> <a href="http://www.rssboard.org/rss-0-9-2#how092RelatesTo091" title="How 0.92 relates to 0.91"><img src="./RSS-0.92_files/left-arrow.gif" height="9" width="11" border="0"></a></h4>
+<p>RSS 0.92 is upward-compatible with <a href="http://www.rssboard.org/rss-0-9-1">RSS 0.91</a>. 
+</p><p>Every new feature of 0.92 is optional, meaning that a 0.91 file is also a valid 0.92 file.
+</p><h4>Example<a name="example"></a> <a href="http://www.rssboard.org/rss-0-9-2#example" title="Example"><img src="./RSS-0.92_files/left-arrow.gif" height="9" width="11" border="0"></a></h4>
+<p>Here is a <a href="http://static.userland.com/gems/backend/gratefulDead.xml">RSS 0.92 file</a> that illustrates many of the features described on this page.
+
+</p><h4>&lt;language&gt; is optional<a name="ltlanguagegtIsOptional"></a> <a href="http://www.rssboard.org/rss-0-9-2#ltlanguagegtIsOptional" title="&lt;language&gt; is optional"><img src="./RSS-0.92_files/left-arrow.gif" height="9" width="11" border="0"></a></h4>
+<p>In 0.91, the &lt;language&gt; element is required. In 0.92 it is optional. 
+</p><p>Why? If a channel is formed from various input sources there's no way to know that it's going to only contain a single language.
+</p><h4>All sub-elements of &lt;item&gt; are optional<a name="allSubelementsOfLtitemgtAreOptional"></a> <a href="http://www.rssboard.org/rss-0-9-2#allSubelementsOfLtitemgtAreOptional" title="All sub-elements of &lt;item&gt; are optional"><img src="./RSS-0.92_files/left-arrow.gif" height="9" width="11" border="0"></a></h4>
+
+<p>In 0.91, &lt;link&gt; and &lt;title&gt; are required sub-elements of &lt;item&gt; and &lt;description&gt; is optional. 
+</p><p>In 0.92, all sub-elements of &lt;item&gt; are optional. 
+</p><p>Why? When a RSS file reflects the content of a weblog or "blog" site, the structure required by previous versions of RSS was often impossible to synthesize. For example, there is no actual limit on the number of links a weblog item can have. 
+</p><p>Further, 0.92 allows entity-encoded HTML in the &lt;description&gt; of an item, to reflect actual practice by bloggers, who are often proficient HTML coders. 
+
+</p><h4>&lt;source&gt; sub-element of &lt;item&gt;<a name="ltsourcegtSubelementOfLtitemgt"></a> <a href="http://www.rssboard.org/rss-0-9-2#ltsourcegtSubelementOfLtitemgt" title="&lt;source&gt; sub-element of &lt;item&gt;"><img src="./RSS-0.92_files/left-arrow.gif" height="9" width="11" border="0"></a></h4>
+<p>&lt;source&gt; is a new optional sub-element of &lt;item&gt;.
+</p><p>Its value is the name of the RSS channel that the item came from, derived from its &lt;title&gt;. It has one required attribute, url, which links to the XMLization of the source.
+</p><p class="example">&lt;source url="http://www.myapplemenu.com/cgi-bin/surfView.cgi?category=applesurf&amp;<br>mainfull=1000&amp;fmt=scripting&amp;template=scripting"&gt;AppleSurf&lt;/source&gt;
+
+</p><p>The purpose of this element is to propogate credit for links, to publicize the sources of news items. 
+</p><h4>&lt;enclosure&gt; sub-element of &lt;item&gt;<a name="ltenclosuregtSubelementOfLtitemgt"></a> <a href="http://www.rssboard.org/rss-0-9-2#ltenclosuregtSubelementOfLtitemgt" title="&lt;enclosure&gt; sub-element of &lt;item&gt;"><img src="./RSS-0.92_files/left-arrow.gif" height="9" width="11" border="0"></a></h4>
+<p>&lt;enclosure&gt; is a new optional sub-element of &lt;item&gt;.
+</p><p>It has three required attributes. url says where the enclosure is located, length says how big it is in bytes, and type says what its type is, a standard MIME type.
+
+</p><p>The url must be an http url.
+</p><p class="example">&lt;enclosure url="http://www.scripting.com/mp3s/weatherReportSuite.mp3" length="12216320" type="audio/mpeg" /&gt;
+</p><p>A use-case narrative for this element is <a href="http://www.thetwowayweb.com/payloadsforrss">here</a>
+</p><h4>&lt;category&gt; sub-element of &lt;item&gt;<a name="ltcategorygtSubelementOfLtitemgt"></a> <a href="http://www.rssboard.org/rss-0-9-2#ltcategorygtSubelementOfLtitemgt" title="&lt;category&gt; sub-element of &lt;item&gt;"><img src="./RSS-0.92_files/left-arrow.gif" height="9" width="11" border="0"></a></h4>
+<p>&lt;category&gt; is a new optional sub-element of &lt;item&gt;.
+
+</p><p>It has one optional attribute, domain, a string that identifies a categorization taxonomy. 
+</p><p>The value of the element is a forward-slash-separated string that identifies a hierarchic location in the indicated taxonomy. Processors may establish conventions for the interpretation of categories. Two examples are provided below:
+</p><p class="example">&lt;category domain="http://www.superopendirectory.com/"&gt;standards/xsl/implementations&lt;/category&gt;
+</p><p class="example">&lt;category domain="http://www.fool.com/cusips"&gt;MSFT&lt;/category&gt;
+</p><h4>&lt;cloud&gt; sub-element of &lt;channel&gt;<a name="ltcloudgtSubelementOfLtchannelgt"></a> <a href="http://www.rssboard.org/rss-0-9-2#ltcloudgtSubelementOfLtchannelgt" title="&lt;cloud&gt; sub-element of &lt;channel&gt;"><img src="./RSS-0.92_files/left-arrow.gif" height="9" width="11" border="0"></a></h4>
+
+<p>&lt;cloud&gt; is a new optional sub-element of &lt;channel&gt;. It specifies a Web service that supports the rssCloud interface which can be implemented in HTTP-POST, XML-RPC or SOAP 1.1. 
+</p><p>Its purpose is to allow processes to register with a cloud to be notified of updates to the channel. 
+</p><p class="example">&lt;cloud domain="data.ourfavoritesongs.com" port="80" path="/RPC2" registerProcedure="ourFavoriteSongs.rssPleaseNotify" protocol="xml-rpc"/&gt;
+</p><p>A full explanation of this element and the rssCloud interface is <a href="http://www.thetwowayweb.com/soapmeetsrss">here</a>.
+</p><h4>All limits are eliminated<a name="allLimitsAreEliminated"></a> <a href="http://www.rssboard.org/rss-0-9-2#allLimitsAreEliminated" title="All limits are eliminated"><img src="./RSS-0.92_files/left-arrow.gif" height="9" width="11" border="0"></a></h4>
+
+<p>In RSS 0.91 various elements are restricted to 500 or 100 characters. There can be no more than 15 &lt;items&gt; in a 0.91 &lt;channel&gt;. 
+</p><p>There are no string-length or XML-level limits in RSS 0.92. 
+</p><p>Processors may impose their own limits, and generators may have preferences that say no more than a certain number of &lt;item&gt;s can appear in a channel, or that strings are limited in length.
+</p><h4>Copyright and disclaimer<a name="copyrightAndDisclaimer"></a> <a href="http://www.rssboard.org/rss-0-9-2#copyrightAndDisclaimer" title="Copyright and disclaimer"><img src="./RSS-0.92_files/left-arrow.gif" height="9" width="11" border="0"></a></h4>
+<p><a name="copyright"></a>© Copyright 1997-2000 UserLand Software. All Rights Reserved.
+</p><p>This document and translations of it may be copied and furnished to others, and derivative works that comment on or otherwise explain it or assist in its implementation may be prepared, copied, published and distributed, in whole or in part, without restriction of any kind, provided that the above copyright notice and these paragraphs are included on all such copies and derivative works.  
+</p><p>This document may not be modified in any way, such as by removing the copyright notice or references to UserLand or other organizations. Further, while these copyright restrictions apply to the written RSS specification, no claim of ownership is made by UserLand to the format it describes. Any party may, for commercial or non-commercial purposes, implement this protocol without royalty or license fee to UserLand. The limited permissions granted herein are perpetual and will not be revoked by UserLand or its successors or assigns.
+</p><p>This document and the information contained herein is provided on an "AS IS" basis and USERLAND DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE INFORMATION HEREIN WILL NOT INFRINGE ANY RIGHTS OR ANY IMPLIED WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. 
+</p></div><!-- End Main Content -->
+</div></td>
+<td class="sidebar">
+<!-- Begin Sidebar -->
+
+<div class="sidebargroup">
+<div class="sidebartitle">Main Menu</div>
+<div class="sidebarlink"><a href="http://www.rssboard.org/">RSS Advisory Board</a></div>
+<div class="sidebarlink"><a href="http://www.rssboard.org/rss-specification">RSS Specification</a></div>
+<div class="sidebarlink"><a href="http://www.rssboard.org/rss-profile">RSS Profile</a></div>
+<div class="sidebarlink"><a href="http://www.rssboard.org/rss-validator">RSS Validator</a></div>
+<div class="sidebarlink"><a href="http://www.rssboard.org/rss-autodiscovery">RSS Autodiscovery</a></div>
+<div class="sidebarlink"><a href="http://www.rssboard.org/advisory-board">Board Members</a></div>
+<div class="sidebarlink"><a href="http://www.rssboard.org/charter" rel="nofollow">Charter</a></div>
+<div class="sidebarlink"><a href="http://groups.yahoo.com/group/rss-board" rel="nofollow">RSS-Board Mailing List</a></div>
+<div class="sidebarlink"><a href="http://groups.yahoo.com/group/rss-public" rel="nofollow">RSS-Public Mailing List</a></div>
+<div class="sidebarlink"><a href="http://groups.yahoo.com/group/rss-media" rel="nofollow">RSS-Media Mailing List</a></div>
+<div class="sidebarlink"><a href="http://www.rssboard.org/rss-language-codes">RSS Language Codes</a></div>
+<div class="sidebarlink"><a href="http://www.rssboard.org/rsscloud-interface">RSSCloud Interface</a></div>
+<div class="sidebarlink"><a href="http://www.rssboard.org/rss-history">RSS History</a></div>
+</div>
+
+<div class="sidebargroup">
+<div class="sidebartitle">RSS Feeds</div>
+
+<div class="sidebarrsslink"><a href="http://feeds.rssboard.org/rssboard" rel="\&quot;nofollow\&quot;"><img src="./RSS-0.92_files/rss-icon.png" alt="Subscribe to Really Simple Syndication" border="0" width="16" height="16"></a> <a href="http://feeds.rssboard.org/rssboard" rel="\&quot;nofollow\&quot;">This Weblog</a></div>
+
+<p align="center"><a href="http://feeds.rssboard.org/rssboard" rel="\&quot;nofollow\&quot;"><img src="./RSS-0.92_files/rssboard" height="26" width="88" style="border:0" alt=""></a></p>
+
+</div>
+
+<div class="sidebargroup">
+<div class="sidebartitle">Spec Library</div>
+<div class="sidebarlink"><a href="http://www.rssboard.org/rss-specification">Current</a></div><div class="sidebarlink"><a href="http://www.rssboard.org/rss-2-0-1">2.0.1</a></div><div class="sidebarlink"><a href="http://www.rssboard.org/rss-2-0">2.0</a></div><div class="sidebarlink"><a href="http://www.rssboard.org/rss-0-9-2">0.92</a></div><div class="sidebarlink"><a href="http://www.rssboard.org/rss-0-9-1">0.91</a> (UserLand)</div><div class="sidebarlink"><a href="http://www.rssboard.org/rss-0-9-1-netscape">0.91</a> (Netscape)</div><div class="sidebarlink"><a href="http://www.rssboard.org/rss-0-9-0">0.90</a></div>
+<div class="sidebarlink"><a href="http://www.rssboard.org/rss-change-notes">RSS Change Notes</a></div>
+</div>
+
+<div class="sidebargroup">
+<div class="sidebartitle">Namespaces</div>
+<div class="sidebarlink"><a href="http://www.rssboard.org/creative-commons">Creative Commons</a></div>
+<div class="sidebarlink"><a href="http://www.rssboard.org/trackback">Trackback</a></div>
+</div>
+
+<div class="sidebargroup">
+<div class="sidebartitle">Archive</div>
+<div class="sidebarlink"><a href="http://www.rssboard.org/site-index" rel="nofollow">Site Index</a></div>
+<div class="sidebarlink"><a href="http://www.rssboard.org/skip-hours-days">SkipHours and SkipDays</a></div>
+<div class="sidebarlink"><a href="http://www.rssboard.org/rss-encoding-examples">RSS Encoding Examples</a></div>
+<div class="sidebarlink"><a href="http://www.rssboard.org/rss-articles">Articles</a></div>
+</div>
+
+<div class="sidebargroup">
+<div class="sidebartitle">Board Members</div>
+<div class="sidebarlink"><a href="http://workbench.cadenhead.org/">Rogers Cadenhead</a></div>
+<div class="sidebarlink"><a href="http://www.chipsquips.com/">Sterling "Chip" Camden</a></div>
+<div class="sidebarlink"><a href="http://www.simonecarletti.com/">Simone Carletti</a></div>
+<div class="sidebarlink"><a href="http://www.xn--8ws00zhy3a.com/">James Holderness</a></div>
+<div class="sidebarlink"><a href="http://www.theshiftedlibrarian.com/">Jenny Levine</a></div>
+<div class="sidebarlink"><a href="http://www.burningdoor.com/eric/">Eric Lunt</a></div>
+<div class="sidebarlink"><a href="http://www.kbcafe.com/rss/">Randy Charles Morin</a></div>
+<div class="sidebarlink"><a href="http://ryanparman.com/">Ryan Parman</a></div>
+<div class="sidebarlink"><a href="http://www.jakesavin.com/">Jake Savin</a></div>
+<div class="sidebarlink"><a href="http://www.shellen.com/">Jason Shellen</a></div>
+<div class="sidebarlink"><a href="http://journal.paul.querna.org/">Paul Querna</a></div>
+</div>
+<div class="sidebargroup">
+<div class="sidebartitle">Other Formats</div>
+<div class="sidebarlink"><a href="http://www.atomenabled.org/" rel="nofollow">Atom</a></div>
+<div class="sidebarlink"><a href="http://web.resource.org/rss/1.0/" rel="nofollow">RDF Site Summary</a></div>
+</div>
+<div class="sidebargroup">
+<div class="sidebartitle">Links</div>
+<div class="sidebarlink"><a href="http://www.icerocket.com/search?tab=blog&amp;q=link%3Awww.rssboard.org">Find on IceRocket</a></div>
+</div>
+
+<!-- End Sidebar -->
+</td>
+</tr>
+</tbody></table>
+<!-- End Page -->
+<div class="footer">
+<p><a href="http://www.rssboard.org/">RSS Advisory Board</a> |
+<a href="http://feeds.rssboard.org/rssboard">RSS Feed</a> |
+<a href="http://www.rssboard.org/rss-specification">RSS Spec</a> |
+Hosted by <a href="http://www.worldreadable.com/">World Readable</a></p>
+</div>
+<!-- Google Analytics Tracking -->
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-631537-4";
+urchinTracker();
+</script>
+<!-- End Google Analytics Tracking -->
+</div>
+
+	</body></html>
