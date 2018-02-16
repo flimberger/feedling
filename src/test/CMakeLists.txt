@@ -3,6 +3,7 @@ configure_file(test_data.hpp.in test_data.hpp)
 
 add_executable(test_parser
     test_parser.cpp
+    ../AtomParser.cpp
     ../Entry.cpp
     ../Feed.cpp
     ../Folder.cpp

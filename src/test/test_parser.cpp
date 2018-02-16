@@ -3,7 +3,7 @@
 #include <QtCore/QFile>
 
 #include "../Feed.hpp"
-#include "../FeedParser.hpp"
+#include "../AtomParser.hpp"
 
 #include "test_data.hpp"
 
@@ -19,7 +19,7 @@ TEST_CASE("Test the atom parser", "[Parser]")
         FAIL("Failed to open file \"" << ATOM_TEST_PATH << '\"');
     }
 
-    FeedParser p{feed};
+    AtomParser p{feed};
 
     bool ret = p.read(&f);
 

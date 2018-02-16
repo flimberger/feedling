@@ -3,7 +3,7 @@
 
 #include <memory>
 
-#include <QtCore/QXmlStreamReader>
+#include <QtCore/QString>
 
 class QIODevice;
 
@@ -11,23 +11,22 @@ namespace feedling {
 
 class Feed;
 
-// Simple parser which currently only understands Atom
+// Common abstract base class for different feed parser implementations.
 class FeedParser
 {
 public:
-    FeedParser(const std::shared_ptr<Feed> &m_feed);
-    ~FeedParser();
+    virtual ~FeedParser();
 
-    bool read(QIODevice *ioDevice);
+    virtual bool read(QIODevice *ioDevice) = 0;
 
-    QString errorString() const;
+    virtual QString errorString() const = 0;
+
+protected:
+    FeedParser(const std::shared_ptr<Feed> &feed);
+
+    const std::shared_ptr<Feed> &feed() const { return m_feed; }
 
 private:
-    void readEntry();
-    void readFeed();
-
-    QXmlStreamReader m_xmlReader;
-
     std::shared_ptr<Feed> m_feed;
 };
 

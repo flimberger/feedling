@@ -4,8 +4,8 @@
 #include <QtNetwork/QNetworkReply>
 #include <QtNetwork/QNetworkRequest>
 
+#include "AtomParser.hpp"
 #include "Feed.hpp"
-#include "FeedParser.hpp"
 #include "FeedsModel.hpp"
 
 namespace feedling {
@@ -36,7 +36,7 @@ void Fetcher::onFeedDownloadFinished(QNetworkReply *reply)
     auto feed = m_feedsModel->getFeed(url).lock();
     if (feed) {
         // TODO: this should be performed in a separate background thread
-        FeedParser parser{feed};
+        AtomParser parser{feed};
         if (!parser.read(reply)) {
             qWarning() << "failed to parse" << url;
         }
