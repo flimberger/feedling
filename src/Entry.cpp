@@ -4,11 +4,12 @@
 
 namespace feedling {
 
-Entry::Entry(QString title, QString content, const QDateTime &dateTime,
+Entry::Entry(QString title, QString content, QString id, const QDateTime &dateTime,
              const std::shared_ptr<Feed> &feed)
   : std::enable_shared_from_this<Entry>{},
     m_title(title),
     m_content(content),
+    m_id{id},
     m_dateTime(dateTime),
     m_feed(feed)
 {}

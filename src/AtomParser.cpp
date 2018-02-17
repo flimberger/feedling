@@ -50,7 +50,7 @@ QDateTime AtomParser::readDateConstruct() {
     Q_ASSERT(m_xmlReader.isStartElement());
 
     auto text = m_xmlReader.readElementText();
-    auto date = QDateTime::fromString(text);
+    auto date = QDateTime::fromString(text, Qt::ISODate);
 
     if (!date.isValid()) {
         qWarning() << "invalid date:" << text;
@@ -64,27 +64,36 @@ void AtomParser::readEntry() {
 
     Person author;  // currently ignored
     Text title;  // the text type is currently ignored
-    QString content;
+    Text content;
+    QString id;
     QDateTime date;
 
     while (m_xmlReader.readNextStartElement()) {
-        qDebug() << "parsing element" << m_xmlReader.name();
-        if (m_xmlReader.name() == "author") {
+        auto name = m_xmlReader.name();
+        qDebug() << "parsing element" << name;
+        if (name == "author") {
             author = readPersonConstruct();
-        } else if (m_xmlReader.name() == "title") {
+        } if (name == "id") {
+            id = m_xmlReader.readElementText();
+        } else if (name == "title") {
             title = readTextConstruct();
-        } else if (m_xmlReader.name() == "content") {
-            content = m_xmlReader.readElementText();
-        } else if (m_xmlReader.name() == "published") {
+        } else if (name == "published") {
+            if (!date.isValid()) {  // only read the date if this entry was not updated
+                date = readDateConstruct();
+            }
+        } else if (name == "updated") {
             date = readDateConstruct();
+        } else if (name == "content" || name == "summary") {
+            content = readTextConstruct();
         } else {
+            qDebug() << "unknown element" << name;
             m_xmlReader.skipCurrentElement();
         }
     }
 
     qDebug() << "parsed entry" << title.text;
     auto feed = FeedParser::feed();
-    feed->addEntry(std::make_shared<Entry>(title.text, content, date, feed));
+    feed->addEntry(std::make_shared<Entry>(title.text, content.text, id, date, feed));
 }
 
 void AtomParser::readFeed() {
