@@ -33,8 +33,6 @@ void Application::init()
     m_view->setEntriesModel(&m_entriesModel);
     // TODO: make this asynchronous
     m_dataStore.fetchFeeds();
-    // TODO: this should also be asynchronous
-    m_fetcher.onFetch();
 }
 
 void Application::onFetchFeeds()
