@@ -14,7 +14,10 @@ Fetcher::Fetcher(FeedsModel *model, QObject *parent)
   : QObject(parent),
     m_feedsModel{model},
     m_network{new QNetworkAccessManager(this)}
-{}
+{
+    QObject::connect(m_network, &QNetworkAccessManager::finished,
+                     this,      &Fetcher::onFeedDownloadFinished);
+}
 
 void Fetcher::onFetch()
 {
@@ -23,7 +26,7 @@ void Fetcher::onFetch()
     // TODO: parallel jobs
     for (const auto &wref : feeds) {
         if (const auto feed = wref.lock()) {
-            onFeedDownloadFinished(m_network->get(QNetworkRequest(feed->url())));
+            m_network->get(QNetworkRequest(feed->url()));
         }
     }
 }
@@ -38,7 +41,7 @@ void Fetcher::onFeedDownloadFinished(QNetworkReply *reply)
         // TODO: this should be performed in a separate background thread
         AtomParser parser{feed};
         if (!parser.read(reply)) {
-            qWarning() << "failed to parse" << url;
+            qWarning() << "failed to parse" << url.toString() << ':' << parser.errorString();
         }
     } else {
         qWarning() << "unknown URL:" << url;
