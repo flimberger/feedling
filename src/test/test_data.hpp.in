@@ -4,6 +4,7 @@
 namespace feedling {
 
 constexpr const char *ATOM_TEST_PATH = "@TEST_SOURCE_DIR@/atom_test.xml";
+constexpr const char *RSS_TEST_PATH = "@TEST_SOURCE_DIR@/rss_test.xml";
 
 }  // namespace feedling
 

@@ -10,6 +10,7 @@ set(feedling_SRCS
     Fetcher.cpp
     Folder.cpp
     Presenter.cpp
+    RSSParser.cpp
     TextFileDataStore.cpp
     TreeItem.cpp
     View.cpp

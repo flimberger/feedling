@@ -8,7 +8,8 @@ add_executable(test_parser
     ../Feed.cpp
     ../Folder.cpp
     ../FeedParser.cpp
-    ../TreeItem)
+    ../RSSParser.cpp
+    ../TreeItem.cpp)
 target_link_libraries(test_parser PRIVATE test_base Qt5::Core)
 
 add_test(NAME test_parser COMMAND test_parser)
