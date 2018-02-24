@@ -2,6 +2,8 @@
 
 #include <sstream>
 
+#include <QtCore/QtDebug>
+
 #include "Entry.hpp"
 #include "Feed.hpp"
 
@@ -21,7 +23,8 @@ bool RSSParser::read(QIODevice *ioDevice)
                     readChannel();
                 } else {
                     std::stringstream s{};
-                    s << "Encountered" << m_xmlReader.name().toString().toUtf8().data() << "instead of channel";
+                    s << "Encountered \"" << m_xmlReader.name().toString().toUtf8().data()
+                      << "\" instead of \"channel\"";
                     m_xmlReader.raiseError(QString::fromUtf8(s.str().c_str()));
                 }
             }
@@ -71,6 +74,8 @@ void RSSParser::readItem()
             id = m_xmlReader.readElementText();
         } else if (name == "pubDate") {
             date = QDateTime::fromString(m_xmlReader.readElementText());
+        } else {
+            m_xmlReader.skipCurrentElement();
         }
     }
 
