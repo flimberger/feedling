@@ -58,7 +58,16 @@ void Fetcher::onFetch()
     // TODO: parallel jobs
     for (const auto &wref : feeds) {
         if (const auto feed = wref.lock()) {
-            m_network->get(QNetworkRequest(feed->url()));
+            // TODO: decide if this is the correct way, but it does indeed fix blog.qt.io
+            auto request = QNetworkRequest{feed->url()};
+            // TODO: should redirects be handled by the access manager?
+            // TODO: should (permanent) redirects update the feed URL?
+            request.setAttribute(QNetworkRequest::FollowRedirectsAttribute, true);
+            // TODO: extend "User-Agent" header with Qt version, OS and architecture
+            request.setRawHeader("User-Agent", "feedling");  // wordpress.com requires this header
+            // TODO: set "Accept" header
+            // TODO: set "Accept-Charset" header
+            m_network->get(request);
         }
     }
 }
