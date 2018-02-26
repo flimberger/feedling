@@ -1,6 +1,6 @@
 #include "Feed.hpp"
 
-#include "Folder.hpp"
+#include <algorithm>
 
 namespace feedling {
 
@@ -39,6 +39,20 @@ std::shared_ptr<Entry> Feed::getEntry(int idx) const
 {
     Q_ASSERT(idx >= 0);
     return m_entries[static_cast<decltype (m_entries)::size_type>(idx)];
+}
+
+std::optional<const std::shared_ptr<Entry>> Feed::getEntry(QByteArray id) const
+{
+    auto iter = std::find_if(std::cbegin(m_entries), std::cend(m_entries),
+                             [id](const std::shared_ptr<Entry> &entry) {
+        return entry->id() == id;
+    });
+
+    if (iter == std::cend(m_entries)) {
+        return std::nullopt;
+    }
+
+    return *iter;
 }
 
 void Feed::addEntry(std::shared_ptr<Entry> &&entry)

@@ -1,6 +1,7 @@
 #ifndef FEEDLING_FEED_H
 #define FEEDLING_FEED_H
 
+#include <optional>
 #include <vector>
 
 #include <QtCore/QUrl>
@@ -26,6 +27,7 @@ public:
     int size() const;
     std::shared_ptr<Entry> getEntry(int idx) const;
 
+    std::optional<const std::shared_ptr<Entry>> getEntry(QByteArray id) const;
     void addEntry(std::shared_ptr<Entry> &&entry);
 
 private:

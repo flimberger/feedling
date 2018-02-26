@@ -3,6 +3,7 @@
 #include <sstream>
 
 #include <QtCore/QtDebug>
+#include <QtCore/QCryptographicHash>
 
 #include "Entry.hpp"
 #include "Feed.hpp"
@@ -60,7 +61,7 @@ void RSSParser::readItem()
 
     QString title;
     QString content;
-    QString id;
+    QByteArray id;
     QDateTime date;
 
     while (m_xmlReader.readNextStartElement()) {
@@ -71,7 +72,7 @@ void RSSParser::readItem()
         } else if (name == "description") {
             content = m_xmlReader.readElementText();
         } else if (name == "guid") {
-            id = m_xmlReader.readElementText();
+            id = m_xmlReader.readElementText().toUtf8();
         } else if (name == "pubDate") {
             date = QDateTime::fromString(m_xmlReader.readElementText());
         } else {
@@ -79,7 +80,22 @@ void RSSParser::readItem()
         }
     }
 
-    feed()->addEntry(std::make_shared<Entry>(title, content, id, date, feed()));
+    if (id.isEmpty()) {
+        // The <guid> element is optional in RSS, so we have to create an ID ourselves.
+        // Unfortunately, the specification is extremely loose on the requirements. Everything is
+        // optional except for a title or a description, but we can't know which one we have.
+        // Therefore, we hash the content if there is one, else we hash the title.
+
+        id = QCryptographicHash::hash(content.isEmpty() ? title.toUtf8() : content.toUtf8(),
+                                      QCryptographicHash::Md5)
+                .toBase64(QByteArray::Base64UrlEncoding | QByteArray::OmitTrailingEquals);
+    }
+
+    auto feed = FeedParser::feed();
+    if (!feed->getEntry(id)) {
+        feed->addEntry(std::make_shared<Entry>(title, content, id, date, feed));
+    }
+    // TODO: check if entry was updated
 }
 
 }  // namespace feedling

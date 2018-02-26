@@ -13,19 +13,20 @@ class Feed;
 class Entry : public std::enable_shared_from_this<Entry>
 {
 public:
-    Entry(QString title, QString content, QString id, const QDateTime &dateTime,
+    Entry(QString title, QString content, QByteArray id, const QDateTime &dateTime,
           const std::shared_ptr<Feed> &feed);
     ~Entry();
 
     QString content() const;
     QString title() const;
+    QByteArray id() const;
     const QDateTime &dateTime() const;
     std::weak_ptr<Feed> feed() const;
 
 private:
     QString m_title;
     QString m_content;
-    QString m_id;
+    QByteArray m_id;
     QDateTime m_dateTime;
     std::weak_ptr<Feed> m_feed;
 };

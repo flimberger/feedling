@@ -65,7 +65,7 @@ void AtomParser::readEntry() {
     Person author;  // currently ignored
     Text title;  // the text type is currently ignored
     Text content;
-    QString id;
+    QByteArray id;
     QDateTime date;
 
     while (m_xmlReader.readNextStartElement()) {
@@ -74,7 +74,7 @@ void AtomParser::readEntry() {
         if (name == "author") {
             author = readPersonConstruct();
         } if (name == "id") {
-            id = m_xmlReader.readElementText();
+            id = m_xmlReader.readElementText().toUtf8();
         } else if (name == "title") {
             title = readTextConstruct();
         } else if (name == "published") {
@@ -93,7 +93,10 @@ void AtomParser::readEntry() {
 
     qDebug() << "parsed entry" << title.text;
     auto feed = FeedParser::feed();
-    feed->addEntry(std::make_shared<Entry>(title.text, content.text, id, date, feed));
+    if (!feed->getEntry(id)) {
+        feed->addEntry(std::make_shared<Entry>(title.text, content.text, id, date, feed));
+    }
+    // TODO: check if entry was updated
 }
 
 void AtomParser::readFeed() {
