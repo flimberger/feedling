@@ -21,7 +21,9 @@ class FeedsModel : public QAbstractItemModel
     Q_OBJECT
 
 public:
-    using FeedContainerType = std::vector<std::shared_ptr<Feed>>;
+    using container_type = std::vector<std::shared_ptr<Feed>>;
+    using iterator = container_type::iterator;
+    using const_iterator = container_type::const_iterator;
 
     enum Roles {
         NAME = Qt::UserRole + 1,
@@ -48,8 +50,15 @@ public:
 
     // FeedsModel interface
 
+    iterator begin();
+    const_iterator begin() const;
+    const_iterator cbegin() const;
+
+    iterator end();
+    const_iterator end() const;
+    const_iterator cend() const;
+
     std::shared_ptr<Feed> getFeed(QUrl feedUrl);
-    const FeedContainerType &feeds() const;
 
     std::shared_ptr<Feed> getItem(const QModelIndex &index);
 
@@ -60,7 +69,7 @@ private:
     TreeItem *addItem(std::unique_ptr<TreeItem> item, Folder *folder);
 
     std::unique_ptr<Folder> m_rootFolder;
-    FeedContainerType m_feeds;
+    container_type m_feeds;
 };
 
 }  // namespace feedling

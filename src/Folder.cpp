@@ -10,11 +10,6 @@ Folder::Folder(QString name)
 
 Folder::~Folder() = default;
 
-const std::vector<std::unique_ptr<TreeItem> > &Folder::items() const
-{
-    return m_items;
-}
-
 void Folder::addItem(std::unique_ptr<TreeItem> item)
 {
     item->setFolder(this);
@@ -51,5 +46,13 @@ TreeItem *Folder::getItem(int idx)
 {
     return const_cast<TreeItem *>(static_cast<const Folder *>(this)->getItem(idx));
 }
+
+Folder::iterator Folder::begin() { return std::begin(m_items); }
+Folder::const_iterator Folder::begin() const { return std::cbegin(m_items); }
+Folder::const_iterator Folder::cbegin() const { return std::cbegin(m_items); }
+
+Folder::iterator Folder::end() { return std::end(m_items); }
+Folder::const_iterator Folder::end() const { return std::cend(m_items); }
+Folder::const_iterator Folder::cend() const { return std::cend(m_items); }
 
 }  // namespace feedling

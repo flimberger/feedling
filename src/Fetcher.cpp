@@ -53,22 +53,23 @@ Fetcher::Fetcher(FeedsModel *model, QObject *parent)
 
 void Fetcher::onFetch()
 {
-    const auto feeds = m_feedsModel->feeds();
-    qDebug() << "fetching" << feeds.size() << "feeds";
+    const auto begin = std::cbegin(*m_feedsModel);
+    const auto end = std::cend(*m_feedsModel);
+
+    qDebug() << "fetching" << end - begin << "feeds";
+
     // TODO: parallel jobs
-    for (const auto &feed : feeds) {
-        if (feed) {
-            // TODO: decide if this is the correct way, but it does indeed fix blog.qt.io
-            auto request = QNetworkRequest{feed->url()};
-            // TODO: should redirects be handled by the access manager?
-            // TODO: should (permanent) redirects update the feed URL?
-            request.setAttribute(QNetworkRequest::FollowRedirectsAttribute, true);
-            // TODO: extend "User-Agent" header with Qt version, OS and architecture
-            request.setRawHeader("User-Agent", "feedling");  // wordpress.com requires this header
-            // TODO: set "Accept" header
-            // TODO: set "Accept-Charset" header
-            m_network->get(request);
-        }
+    for (auto iter = begin; iter != end; ++iter) {
+        // TODO: decide if this is the correct way, but it does indeed fix blog.qt.io
+        auto request = QNetworkRequest{(*iter)->url()};
+        // TODO: should redirects be handled by the access manager?
+        // TODO: should (permanent) redirects update the feed URL?
+        request.setAttribute(QNetworkRequest::FollowRedirectsAttribute, true);
+        // TODO: extend "User-Agent" header with Qt version, OS and architecture
+        request.setRawHeader("User-Agent", "feedling");  // wordpress.com requires this header
+        // TODO: set "Accept" header
+        // TODO: set "Accept-Charset" header
+        m_network->get(request);
     }
 }
 

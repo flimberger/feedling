@@ -11,10 +11,14 @@ namespace feedling {
 class Folder : public TreeItem
 {
 public:
+    using value_type = std::unique_ptr<TreeItem>;
+    using container_type = std::vector<value_type>;
+    using iterator = container_type::iterator;
+    using const_iterator = container_type::const_iterator;
+
     Folder(QString name);
     virtual ~Folder();
 
-    const std::vector<std::unique_ptr<TreeItem>> &items() const;
     void addItem(std::unique_ptr<TreeItem> item);
 
     int size() const;
@@ -22,8 +26,16 @@ public:
     const TreeItem *getItem(int idx) const;
     TreeItem *getItem(int idx);
 
+    iterator begin();
+    const_iterator begin() const;
+    const_iterator cbegin() const;
+
+    iterator end();
+    const_iterator end() const;
+    const_iterator cend() const;
+
 private:
-    std::vector<std::unique_ptr<TreeItem>> m_items;
+    container_type m_items;
 };
 
 }  // namespace feedling

@@ -83,17 +83,19 @@ QModelIndex FeedsModel::parent(const QModelIndex &child) const
 
         if (parent && (parent != m_rootFolder.get())) {
             int row = -1;
-            const auto &items = parent->items();
-            const auto it = std::find_if(std::cbegin(items), std::cend(items),
+            const auto it = std::find_if(std::cbegin(*parent), std::cend(*parent),
                                          [item](const std::unique_ptr<TreeItem> &p) {
                     return p.get() == item;
             });
-            if (it != std::cend(items)) {
-                row = it - std::cbegin(items);
+
+            if (it != std::cend(*parent)) {
+                row = it - std::cbegin(*parent);
             }
+
             return createIndex(row, 0, parent);
         }
     }
+
     return QModelIndex();
 }
 
@@ -126,6 +128,14 @@ int FeedsModel::rowCount(const QModelIndex &parent) const
 
 // FeedsModel interface
 
+FeedsModel::iterator FeedsModel::begin() { return std::begin(m_feeds); }
+FeedsModel::const_iterator FeedsModel::begin() const { return std::cbegin(m_feeds); }
+FeedsModel::const_iterator FeedsModel::cbegin() const { return std::cbegin(m_feeds); }
+
+FeedsModel::iterator FeedsModel::end() { return std::end(m_feeds); }
+FeedsModel::const_iterator FeedsModel::end() const { return std::cend(m_feeds); }
+FeedsModel::const_iterator FeedsModel::cend() const { return std::cend(m_feeds); }
+
 std::shared_ptr<Feed> FeedsModel::getFeed(QUrl feedUrl)
 {
     const auto end = std::cend(m_feeds);
@@ -139,11 +149,6 @@ std::shared_ptr<Feed> FeedsModel::getFeed(QUrl feedUrl)
     }
 
     return *iter;
-}
-
-const FeedsModel::FeedContainerType &FeedsModel::feeds() const
-{
-    return m_feeds;
 }
 
 std::shared_ptr<Feed> FeedsModel::getItem(const QModelIndex &index)
