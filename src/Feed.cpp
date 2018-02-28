@@ -5,10 +5,20 @@
 namespace feedling {
 
 Feed::Feed(QString name, QString description, const QUrl &url)
-  : feedling::TreeItem (name, TreeItem::Type::FEED),
-    m_description(description),
-    m_url(url)
+  : m_name{name},
+    m_description{description},
+    m_url{url}
 {}
+
+QString Feed::name() const
+{
+    return m_name;
+}
+
+void Feed::setName(QString newName)
+{
+    m_name = newName;
+}
 
 QString Feed::description() const
 {
@@ -58,6 +68,21 @@ std::optional<const std::shared_ptr<Entry>> Feed::getEntry(QByteArray id) const
 void Feed::addEntry(std::shared_ptr<Entry> &&entry)
 {
     m_entries.emplace_back(entry);
+}
+
+FeedItem::FeedItem(const std::shared_ptr<Feed> &feed)
+  : TreeItem{feed->name(), TreeItem::Type::FEED},
+    m_feed{feed}
+{}
+
+const Feed *FeedItem::data() const
+{
+    return m_feed.get();
+}
+
+std::shared_ptr<Feed> FeedItem::data()
+{
+    return m_feed;
 }
 
 }  // namespace feedling

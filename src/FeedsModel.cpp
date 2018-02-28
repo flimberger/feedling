@@ -7,13 +7,11 @@
 #include <QtCore/QtDebug>
 #include <QtCore/QVector>
 
-#include "Feed.hpp"
-
 namespace feedling {
 
 FeedsModel::FeedsModel(QObject *parent)
   : QAbstractItemModel(parent),
-    m_rootFolder(std::make_shared<Folder>("[root]"))
+    m_rootFolder(std::make_unique<Folder>("[root]"))
 {}
 
 FeedsModel::~FeedsModel() = default;
@@ -71,7 +69,7 @@ QModelIndex FeedsModel::index(int row, int column, const QModelIndex &parent) co
     if (parentItem->type() == TreeItem::Type::FOLDER) {
         auto *folder = static_cast<Folder *>(parentItem);
         if (row < folder->size()) {
-            return createIndex(row, column, folder->getItem(row).get());
+            return createIndex(row, column, folder->getItem(row));
         }
     }
     return QModelIndex();
@@ -80,19 +78,20 @@ QModelIndex FeedsModel::index(int row, int column, const QModelIndex &parent) co
 QModelIndex FeedsModel::parent(const QModelIndex &child) const
 {
     if (child.isValid()) {
-        const auto *item = static_cast<TreeItem *>(child.internalPointer());
-        auto parent = item->folder().lock();
-        if (parent && (parent != m_rootFolder)) {
+        auto *item = static_cast<TreeItem *>(child.internalPointer());
+        auto *parent = item->folder();
+
+        if (parent && (parent != m_rootFolder.get())) {
             int row = -1;
             const auto &items = parent->items();
             const auto it = std::find_if(std::cbegin(items), std::cend(items),
-                                         [item](const std::shared_ptr<TreeItem> &p) {
+                                         [item](const std::unique_ptr<TreeItem> &p) {
                     return p.get() == item;
             });
             if (it != std::cend(items)) {
                 row = it - std::cbegin(items);
             }
-            return createIndex(row, 0, parent.get());
+            return createIndex(row, 0, parent);
         }
     }
     return QModelIndex();
@@ -127,33 +126,22 @@ int FeedsModel::rowCount(const QModelIndex &parent) const
 
 // FeedsModel interface
 
-std::weak_ptr<Feed> FeedsModel::getFeed(QUrl feedUrl)
+std::shared_ptr<Feed> FeedsModel::getFeed(QUrl feedUrl)
 {
-    auto folders = std::deque<std::shared_ptr<Folder>>{ m_rootFolder };
-    while (!folders.empty()) {
-        auto currentFolder = folders.front();
-        folders.pop_front();
+    const auto end = std::cend(m_feeds);
+    auto iter = std::find_if(std::cbegin(m_feeds), end,
+                             [feedUrl](const std::shared_ptr<Feed> &feed) {
+        return feedUrl == feed->url();
+    });
 
-        for (const auto &item : currentFolder->items()) {
-            switch (item->type()) {
-                case TreeItem::Type::FEED: {
-                    const auto feed = std::static_pointer_cast<Feed>(item);
-                    if (feed->url() == feedUrl) {
-                        return feed;
-                    }
-                    break;
-                }
-                case TreeItem::Type::FOLDER: {
-                    folders.push_back(std::static_pointer_cast<Folder>(item));
-                    break;
-                }
-            }
-        }
+    if (iter == end) {
+        return nullptr;
     }
-    return std::weak_ptr<Feed>();
+
+    return *iter;
 }
 
-const std::vector<std::weak_ptr<Feed>> &FeedsModel::feeds() const
+const FeedsModel::FeedContainerType &FeedsModel::feeds() const
 {
     return m_feeds;
 }
@@ -161,16 +149,39 @@ const std::vector<std::weak_ptr<Feed>> &FeedsModel::feeds() const
 std::shared_ptr<Feed> FeedsModel::getItem(const QModelIndex &index)
 {
     if (index.isValid()) {
-        const auto *ptr = index.internalPointer();
-        auto it = std::find_if(std::cbegin(m_feeds), std::cend(m_feeds),
-                               [ptr] (const std::weak_ptr<Feed> &item) {
-            return item.lock().get() == ptr;
-        });
-        if (it != std::cend(m_feeds)) {
-            return it->lock();
+        auto *ptr = static_cast<TreeItem *>(index.internalPointer());
+
+        if (ptr->type() == TreeItem::Type::FEED) {
+            return static_cast<FeedItem *>(ptr)->data();
         }
     }
+
     return nullptr;
+}
+
+FeedItem *FeedsModel::addFeed(const std::shared_ptr<Feed> &feed, Folder *folder)
+{
+    return static_cast<FeedItem *>(addItem(std::make_unique<FeedItem>(feed), folder));
+}
+
+Folder *FeedsModel::addFolder(std::unique_ptr<Folder> item, Folder *folder)
+{
+    return static_cast<Folder *>(addItem(std::unique_ptr<TreeItem>{static_cast<TreeItem *>(item.release())}, folder));
+}
+
+TreeItem *FeedsModel::addItem(std::unique_ptr<TreeItem> item, Folder *folder)
+{
+    auto *ptr = item.get();
+
+    if (item->type() == TreeItem::Type::FEED) {
+        m_feeds.emplace_back(static_cast<FeedItem *>(ptr)->data());
+    }
+    if (!folder) {
+        folder = m_rootFolder.get();
+    }
+    folder->addItem(std::move(item));
+
+    return ptr;
 }
 
 }  // namespace feedling

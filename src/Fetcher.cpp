@@ -56,8 +56,8 @@ void Fetcher::onFetch()
     const auto feeds = m_feedsModel->feeds();
     qDebug() << "fetching" << feeds.size() << "feeds";
     // TODO: parallel jobs
-    for (const auto &wref : feeds) {
-        if (const auto feed = wref.lock()) {
+    for (const auto &feed : feeds) {
+        if (feed) {
             // TODO: decide if this is the correct way, but it does indeed fix blog.qt.io
             auto request = QNetworkRequest{feed->url()};
             // TODO: should redirects be handled by the access manager?
@@ -77,7 +77,7 @@ void Fetcher::onFeedDownloadFinished(QNetworkReply *reply)
     const auto &url = reply->url();
     // TODO: I'm not shure this does belong into the fetcher, but another level of indirection seems
     // also like unneccessary overhead to me. Maybe it belongs into the Feed class.
-    auto feed = m_feedsModel->getFeed(url).lock();
+    auto feed = m_feedsModel->getFeed(url);
     if (feed) {
         // TODO: this should be performed in a separate background thread
         auto contentType = reply->rawHeader("Content-Type");

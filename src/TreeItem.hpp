@@ -16,24 +16,24 @@ public:
         FEED,
         FOLDER
     };
+
     virtual ~TreeItem();
 
     QString name() const;
     void setName(QString newName);
 
-    std::weak_ptr<Folder> folder() const;
+    Folder *folder();
+    const Folder *folder() const;
+    void setFolder(Folder *newFolder);
+
     Type type() const;
 
 protected:
     TreeItem(QString name, Type type);
 
 private:
-    friend class Folder;
-
-    void setFolder(const std::shared_ptr<Folder> &newFolder);
-
     QString m_name;
-    std::weak_ptr<Folder> m_folder;
+    Folder *m_folder;
     Type m_type;
 };
 

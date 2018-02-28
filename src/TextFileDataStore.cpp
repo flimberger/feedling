@@ -14,25 +14,14 @@ TextFileDataStore::TextFileDataStore(const QString &baseDirectory, FeedsModel *m
 
 void TextFileDataStore::fetchFeeds()
 {
-    const auto progQtPath = std::vector<QString>{ "programming", "qt" };
-    const auto graphicsPath = std::vector<QString>{ "graphics" };
+    auto *progFolder = m_feedsModel->addFolder(std::make_unique<Folder>("programming"), nullptr);
+    auto *qtFolder = m_feedsModel->addFolder(std::make_unique<Folder>("qt"), progFolder);
+    auto *gfxFolder = m_feedsModel->addFolder(std::make_unique<Folder>("graphics"), nullptr);
 
-    bool success;
-
-    success = m_feedsModel->addItem<std::vector<QString>>(std::make_shared<Folder>(progQtPath[0]), std::vector<QString>{});
-    Q_ASSERT(success);
-    success = m_feedsModel->addItem<std::vector<QString>>(std::make_shared<Folder>(progQtPath[1]), std::vector<QString>{progQtPath[0]});
-    Q_ASSERT(success);
-    success = m_feedsModel->addItem<std::vector<QString>>(std::make_shared<Folder>(graphicsPath[0]), std::vector<QString>{});
-    Q_ASSERT(success);
-    success = m_feedsModel->addItem<std::vector<QString>>(std::make_shared<Feed>("Qt Blog", "The official Qt Blog", QUrl("http://blog.qt.io/feed")), progQtPath);
-    Q_ASSERT(success);
-    success = m_feedsModel->addItem<std::vector<QString>>(std::make_shared<Feed>("KDAB Blogs", "KDAB Blogs", QUrl("https://www.kdab.com/category/blogs/feed/")), progQtPath);
-    Q_ASSERT(success);
-    success = m_feedsModel->addItem<std::vector<QString>>(std::make_shared<Feed>("Pushing Pixels", "Kirill Grouchnikovs Blog", QUrl("http://www.pushing-pixels.org/feed")), graphicsPath);
-    Q_ASSERT(success);
-    success = m_feedsModel->addItem<std::vector<QString>>(std::make_shared<Feed>("The ryg blog", "asdf", QUrl("https://fgiesen.wordpress.com/feed/")), std::vector<QString>{progQtPath[0]});
-    Q_ASSERT(success);
+    m_feedsModel->addFeed(std::make_shared<Feed>("Qt Blog", "The official Qt Blog", QUrl("http://blog.qt.io/feed")), qtFolder);
+    m_feedsModel->addFeed(std::make_shared<Feed>("KDAB Blogs", "KDAB Blogs", QUrl("https://www.kdab.com/category/blogs/feed/")), qtFolder);
+    m_feedsModel->addFeed(std::make_shared<Feed>("Pushing Pixels", "Kirill Grouchnikovs Blog", QUrl("http://www.pushing-pixels.org/feed")), gfxFolder);
+    m_feedsModel->addFeed(std::make_shared<Feed>("The ryg blog", "asdf", QUrl("https://fgiesen.wordpress.com/feed/")), progFolder);
 }
 
 }  // namespace feedling

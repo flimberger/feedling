@@ -21,7 +21,12 @@ void TreeItem::setName(QString newName)
     m_name = newName;
 }
 
-std::weak_ptr<Folder> TreeItem::folder() const
+Folder *TreeItem::folder()
+{
+    return m_folder;
+}
+
+const Folder *TreeItem::folder() const
 {
     return m_folder;
 }
@@ -31,7 +36,7 @@ TreeItem::Type TreeItem::type() const
     return m_type;
 }
 
-void TreeItem::setFolder(const std::shared_ptr<Folder> &newFolder)
+void TreeItem::setFolder(Folder *newFolder)
 {
     m_folder = newFolder;
 }

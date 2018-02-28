@@ -13,10 +13,13 @@ namespace feedling {
 
 class Folder;
 
-class Feed : public TreeItem
+class Feed
 {
 public:
     explicit Feed(QString name, QString description, const QUrl &url);
+
+    QString name() const;
+    void setName(QString newName);
 
     QString description() const;
     void setDescription(QString newDescription);
@@ -31,9 +34,21 @@ public:
     void addEntry(std::shared_ptr<Entry> &&entry);
 
 private:
+    QString m_name;
     QString m_description;
     QUrl m_url;
     std::vector<std::shared_ptr<Entry>> m_entries;
+};
+
+class FeedItem : public TreeItem {
+public:
+    explicit FeedItem(const std::shared_ptr<Feed> &feed);
+
+    const Feed *data() const;
+    std::shared_ptr<Feed> data();
+
+private:
+    std::shared_ptr<Feed> m_feed;
 };
 
 }  // namespace feedling

@@ -9,6 +9,7 @@
 #include <QtCore/QModelIndex>
 #include <QtCore/QVariant>
 
+#include "Feed.hpp"
 #include "Folder.hpp"
 
 namespace feedling {
@@ -20,6 +21,8 @@ class FeedsModel : public QAbstractItemModel
     Q_OBJECT
 
 public:
+    using FeedContainerType = std::vector<std::shared_ptr<Feed>>;
+
     enum Roles {
         NAME = Qt::UserRole + 1,
         DESCRIPTION,
@@ -45,55 +48,20 @@ public:
 
     // FeedsModel interface
 
-    std::weak_ptr<Feed> getFeed(QUrl feedUrl);
-    const std::vector<std::weak_ptr<Feed>> &feeds() const;
+    std::shared_ptr<Feed> getFeed(QUrl feedUrl);
+    const FeedContainerType &feeds() const;
 
     std::shared_ptr<Feed> getItem(const QModelIndex &index);
 
-    template<typename Container>
-    std::weak_ptr<Folder> getFolder(const Container &path);
-
-    template<typename Container>
-    bool addItem(const std::shared_ptr<TreeItem> &item, const Container &path);
+    FeedItem *addFeed(const std::shared_ptr<Feed> &item, Folder *folder);
+    Folder *addFolder(std::unique_ptr<Folder> item, Folder *folder);
 
 private:
-    std::shared_ptr<Folder> m_rootFolder;
-    std::vector<std::weak_ptr<Feed>> m_feeds;
+    TreeItem *addItem(std::unique_ptr<TreeItem> item, Folder *folder);
+
+    std::unique_ptr<Folder> m_rootFolder;
+    FeedContainerType m_feeds;
 };
-
-template<typename Container>
-std::weak_ptr<Folder> FeedsModel::getFolder(const Container &path)
-{
-    if (path.empty()) {
-        return m_rootFolder;
-    }
-    auto currentFolder = m_rootFolder;
-    for (const auto &name : path) {
-        auto subFolder = currentFolder->getItem(name);
-        if (!subFolder || (subFolder->type() != TreeItem::Type::FOLDER)) {
-            break;
-        } else {
-            currentFolder = std::static_pointer_cast<Folder>(subFolder);
-        }
-    }
-    return currentFolder;
-}
-
-template<typename Container>
-bool FeedsModel::addItem(const std::shared_ptr<TreeItem> &item,
-                         const Container &path)
-{
-    auto folder = getFolder(path).lock();
-    if (folder) {
-        folder->addItem(item);
-        if (item->type() == TreeItem::Type::FEED) {
-            const auto ptr = std::static_pointer_cast<Feed>(item);
-            m_feeds.emplace_back(ptr);
-        }
-        return true;
-    }
-    return false;
-}
 
 }  // namespace feedling
 
