@@ -21,7 +21,9 @@ class FeedsModel : public QAbstractItemModel
     Q_OBJECT
 
 public:
-    using container_type = std::vector<std::shared_ptr<Feed>>;
+    using value_type = std::shared_ptr<Feed>;
+    using container_type = std::vector<value_type>;
+    using size_type = container_type::size_type;
     using iterator = container_type::iterator;
     using const_iterator = container_type::const_iterator;
 
@@ -50,14 +52,17 @@ public:
 
     // FeedsModel interface
 
-    // Iterators for the feeds
-    iterator begin();
-    const_iterator begin() const;
-    const_iterator cbegin() const;
+    bool is_empty() const noexcept;  // Contains feeds?
+    size_type size() const noexcept;  // Number of feeds
 
-    iterator end();
-    const_iterator end() const;
-    const_iterator cend() const;
+    // Iterators for the feeds
+    iterator begin() noexcept;
+    const_iterator begin() const noexcept;
+    const_iterator cbegin() const noexcept;
+
+    iterator end() noexcept;
+    const_iterator end() const noexcept;
+    const_iterator cend() const noexcept;
 
 
     std::shared_ptr<Feed> getFeed(QUrl feedUrl);

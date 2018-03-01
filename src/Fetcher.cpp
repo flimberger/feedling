@@ -53,15 +53,12 @@ Fetcher::Fetcher(FeedsModel *model, QObject *parent)
 
 void Fetcher::onFetch()
 {
-    const auto begin = std::cbegin(*m_feedsModel);
-    const auto end = std::cend(*m_feedsModel);
-
-    qDebug() << "fetching" << end - begin << "feeds";
+    qDebug() << "fetching" << m_feedsModel->size() << "feeds";
 
     // TODO: parallel jobs
-    for (auto iter = begin; iter != end; ++iter) {
+    for (const auto &feed : *m_feedsModel) {
         // TODO: decide if this is the correct way, but it does indeed fix blog.qt.io
-        auto request = QNetworkRequest{(*iter)->url()};
+        auto request = QNetworkRequest{feed->url()};
         // TODO: should redirects be handled by the access manager?
         // TODO: should (permanent) redirects update the feed URL?
         request.setAttribute(QNetworkRequest::FollowRedirectsAttribute, true);

@@ -44,6 +44,7 @@ class Folder : public TreeItem
 public:
     using value_type = std::unique_ptr<TreeItem>;
     using container_type = std::vector<value_type>;
+    using size_type = container_type::size_type;
     using iterator = container_type::iterator;
     using const_iterator = container_type::const_iterator;
 
@@ -52,18 +53,20 @@ public:
 
     void addItem(std::unique_ptr<TreeItem> item);
 
-    int size() const;
     const TreeItem *getItem(QString name) const;
     const TreeItem *getItem(int idx) const;
     TreeItem *getItem(int idx);
 
-    iterator begin();
-    const_iterator begin() const;
-    const_iterator cbegin() const;
+    bool is_empty() const noexcept;
+    size_type size() const noexcept;
 
-    iterator end();
-    const_iterator end() const;
-    const_iterator cend() const;
+    iterator begin() noexcept;
+    const_iterator begin() const noexcept;
+    const_iterator cbegin() const noexcept;
+
+    iterator end() noexcept;
+    const_iterator end() const noexcept;
+    const_iterator cend() const noexcept;
 
 private:
     container_type m_items;

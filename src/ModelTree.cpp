@@ -53,12 +53,6 @@ void Folder::addItem(std::unique_ptr<TreeItem> item)
     m_items.emplace_back(std::move(item));
 }
 
-int Folder::size() const
-{
-    Q_ASSERT(m_items.size() < INT_MAX);
-    return static_cast<int>(m_items.size());
-}
-
 const TreeItem *Folder::getItem(QString name) const
 {
     const auto &end = std::end(m_items);
@@ -84,13 +78,16 @@ TreeItem *Folder::getItem(int idx)
     return const_cast<TreeItem *>(static_cast<const Folder *>(this)->getItem(idx));
 }
 
-Folder::iterator Folder::begin() { return std::begin(m_items); }
-Folder::const_iterator Folder::begin() const { return std::cbegin(m_items); }
-Folder::const_iterator Folder::cbegin() const { return std::cbegin(m_items); }
+bool Folder::is_empty() const noexcept { return m_items.empty(); }
+Folder::size_type Folder::size() const noexcept { return m_items.size(); }
 
-Folder::iterator Folder::end() { return std::end(m_items); }
-Folder::const_iterator Folder::end() const { return std::cend(m_items); }
-Folder::const_iterator Folder::cend() const { return std::cend(m_items); }
+Folder::iterator Folder::begin() noexcept { return std::begin(m_items); }
+Folder::const_iterator Folder::begin() const noexcept { return std::cbegin(m_items); }
+Folder::const_iterator Folder::cbegin() const noexcept { return std::cbegin(m_items); }
+
+Folder::iterator Folder::end() noexcept { return std::end(m_items); }
+Folder::const_iterator Folder::end() const noexcept { return std::cend(m_items); }
+Folder::const_iterator Folder::cend() const noexcept { return std::cend(m_items); }
 
 FeedItem::FeedItem(const std::shared_ptr<Feed> &feed)
   : TreeItem{feed->name(), TreeItem::Type::FEED},

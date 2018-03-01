@@ -131,13 +131,16 @@ int FeedsModel::rowCount(const QModelIndex &parent) const
 
 // FeedsModel interface
 
-FeedsModel::iterator FeedsModel::begin() { return std::begin(m_feeds); }
-FeedsModel::const_iterator FeedsModel::begin() const { return std::cbegin(m_feeds); }
-FeedsModel::const_iterator FeedsModel::cbegin() const { return std::cbegin(m_feeds); }
+bool FeedsModel::is_empty() const noexcept { return m_feeds.empty(); }
+FeedsModel::size_type FeedsModel::size() const noexcept { return m_feeds.size(); }
 
-FeedsModel::iterator FeedsModel::end() { return std::end(m_feeds); }
-FeedsModel::const_iterator FeedsModel::end() const { return std::cend(m_feeds); }
-FeedsModel::const_iterator FeedsModel::cend() const { return std::cend(m_feeds); }
+FeedsModel::iterator FeedsModel::begin() noexcept { return std::begin(m_feeds); }
+FeedsModel::const_iterator FeedsModel::begin() const noexcept { return std::cbegin(m_feeds); }
+FeedsModel::const_iterator FeedsModel::cbegin() const noexcept { return std::cbegin(m_feeds); }
+
+FeedsModel::iterator FeedsModel::end() noexcept { return std::end(m_feeds); }
+FeedsModel::const_iterator FeedsModel::end() const noexcept { return std::cend(m_feeds); }
+FeedsModel::const_iterator FeedsModel::cend() const noexcept { return std::cend(m_feeds); }
 
 std::shared_ptr<Feed> FeedsModel::getFeed(QUrl feedUrl)
 {
