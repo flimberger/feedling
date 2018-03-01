@@ -8,11 +8,10 @@ set(feedling_SRCS
     FeedParser.cpp
     FeedsModel.cpp
     Fetcher.cpp
-    Folder.cpp
+    ModelTree.cpp
     Presenter.cpp
     RSSParser.cpp
     TextFileDataStore.cpp
-    TreeItem.cpp
     View.cpp
     ui/MainWindow.cpp
 )

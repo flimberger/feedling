@@ -6,10 +6,9 @@ add_executable(test_parser
     ../AtomParser.cpp
     ../Entry.cpp
     ../Feed.cpp
-    ../Folder.cpp
     ../FeedParser.cpp
-    ../RSSParser.cpp
-    ../TreeItem.cpp)
+    ../ModelTree.cpp
+    ../RSSParser.cpp)
 target_link_libraries(test_parser PRIVATE test_base Qt5::Core)
 
 add_test(NAME test_parser COMMAND test_parser)

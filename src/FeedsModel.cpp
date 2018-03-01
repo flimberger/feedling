@@ -7,6 +7,9 @@
 #include <QtCore/QtDebug>
 #include <QtCore/QVector>
 
+#include "Feed.hpp"
+#include "ModelTree.hpp"
+
 namespace feedling {
 
 FeedsModel::FeedsModel(QObject *parent)
@@ -169,9 +172,9 @@ FeedItem *FeedsModel::addFeed(const std::shared_ptr<Feed> &feed, Folder *folder)
     return static_cast<FeedItem *>(addItem(std::make_unique<FeedItem>(feed), folder));
 }
 
-Folder *FeedsModel::addFolder(std::unique_ptr<Folder> item, Folder *folder)
+Folder *FeedsModel::addFolder(QString name, Folder *folder)
 {
-    return static_cast<Folder *>(addItem(std::unique_ptr<TreeItem>{static_cast<TreeItem *>(item.release())}, folder));
+    return static_cast<Folder *>(addItem(std::make_unique<Folder>(name), folder));
 }
 
 TreeItem *FeedsModel::addItem(std::unique_ptr<TreeItem> item, Folder *folder)

@@ -70,19 +70,4 @@ void Feed::addEntry(std::shared_ptr<Entry> &&entry)
     m_entries.emplace_back(entry);
 }
 
-FeedItem::FeedItem(const std::shared_ptr<Feed> &feed)
-  : TreeItem{feed->name(), TreeItem::Type::FEED},
-    m_feed{feed}
-{}
-
-const Feed *FeedItem::data() const
-{
-    return m_feed.get();
-}
-
-std::shared_ptr<Feed> FeedItem::data()
-{
-    return m_feed;
-}
-
 }  // namespace feedling

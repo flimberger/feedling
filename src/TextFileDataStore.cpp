@@ -14,9 +14,9 @@ TextFileDataStore::TextFileDataStore(const QString &baseDirectory, FeedsModel *m
 
 void TextFileDataStore::fetchFeeds()
 {
-    auto *progFolder = m_feedsModel->addFolder(std::make_unique<Folder>("programming"), nullptr);
-    auto *qtFolder = m_feedsModel->addFolder(std::make_unique<Folder>("qt"), progFolder);
-    auto *gfxFolder = m_feedsModel->addFolder(std::make_unique<Folder>("graphics"), nullptr);
+    auto *progFolder = m_feedsModel->addFolder("programming", nullptr);
+    auto *qtFolder = m_feedsModel->addFolder("qt", progFolder);
+    auto *gfxFolder = m_feedsModel->addFolder("graphics", nullptr);
 
     m_feedsModel->addFeed(std::make_shared<Feed>("Qt Blog", "The official Qt Blog", QUrl("http://blog.qt.io/feed")), qtFolder);
     m_feedsModel->addFeed(std::make_shared<Feed>("KDAB Blogs", "KDAB Blogs", QUrl("https://www.kdab.com/category/blogs/feed/")), qtFolder);

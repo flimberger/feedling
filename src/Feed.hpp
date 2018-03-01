@@ -6,12 +6,9 @@
 
 #include <QtCore/QUrl>
 
-#include "TreeItem.hpp"
 #include "Entry.hpp"
 
 namespace feedling {
-
-class Folder;
 
 class Feed
 {
@@ -38,17 +35,6 @@ private:
     QString m_description;
     QUrl m_url;
     std::vector<std::shared_ptr<Entry>> m_entries;
-};
-
-class FeedItem : public TreeItem {
-public:
-    explicit FeedItem(const std::shared_ptr<Feed> &feed);
-
-    const Feed *data() const;
-    std::shared_ptr<Feed> data();
-
-private:
-    std::shared_ptr<Feed> m_feed;
 };
 
 }  // namespace feedling

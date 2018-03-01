@@ -9,12 +9,12 @@
 #include <QtCore/QModelIndex>
 #include <QtCore/QVariant>
 
-#include "Feed.hpp"
-#include "Folder.hpp"
-
 namespace feedling {
 
 class Feed;
+class FeedItem;
+class Folder;
+class TreeItem;
 
 class FeedsModel : public QAbstractItemModel
 {
@@ -50,6 +50,7 @@ public:
 
     // FeedsModel interface
 
+    // Iterators for the feeds
     iterator begin();
     const_iterator begin() const;
     const_iterator cbegin() const;
@@ -58,12 +59,13 @@ public:
     const_iterator end() const;
     const_iterator cend() const;
 
+
     std::shared_ptr<Feed> getFeed(QUrl feedUrl);
 
     std::shared_ptr<Feed> getItem(const QModelIndex &index);
 
     FeedItem *addFeed(const std::shared_ptr<Feed> &item, Folder *folder);
-    Folder *addFolder(std::unique_ptr<Folder> item, Folder *folder);
+    Folder *addFolder(QString name, Folder *folder);
 
 private:
     TreeItem *addItem(std::unique_ptr<TreeItem> item, Folder *folder);
